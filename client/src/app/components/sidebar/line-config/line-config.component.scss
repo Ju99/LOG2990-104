@@ -10,5 +10,9 @@ mat-slider {
 }
 
 mat-label {
-    color: white;
+    color: rgb(247, 247, 247);
+}
+
+::ng-deep .white .mat-select-value {
+    color: rgb(247, 247, 247);
 }

@@ -1,0 +1,86 @@
+#main-container {
+    width: 1000px;
+    height: 600px;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#header {
+    text-align: center;
+}
+
+app-carousel-drawing {
+    display: inline-flex;
+    margin-left: 4px;
+}
+
+::ng-deep .mat-dialog-container {
+    overflow: hidden !important;
+}
+
+#images-container {
+    width: 1000px;
+    height: 400px;
+}
+
+#no-drawing-container {
+    height: 500px;
+    text-align: center;
+}
+
+mat-spinner {
+    position: absolute;
+    left: 50%;
+}
+
+li {
+    list-style: none;
+    display: inline-block;
+    background-color: rgb(230, 230, 230);
+    border-radius: 10px;
+    padding: 0 5px 0 15px;
+    margin: 5px;
+}
+#filter-container {
+    height: 100px;
+    margin-bottom: 10px;
+    margin-top: 2px;
+}
+
+#filter {
+    padding-top: 10px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+#next-drawing {
+    background-color: lightgray;
+    opacity: 0.8;
+}
+
+#previous-drawing {
+    background-color: lightgray;
+    opacity: 0.8;
+}
+
+#main-drawing {
+    border: red solid 2px;
+}
+
+#scrolling-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 0px;
+}
+#action-container {
+    display: flex;
+    justify-content: center;
+}
+
+#quit-button {
+    left: 90%;
+}
+
+h1 {
+    font-family: fantasy;
+}

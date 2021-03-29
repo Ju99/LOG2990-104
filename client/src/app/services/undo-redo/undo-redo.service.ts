@@ -35,7 +35,6 @@ export class UndoRedoService extends Tool {
 
         const lastObject = this.undoStack.pop();
         const arrayObject = this.undoStack.getAll();
-        console.log(arrayObject);
         this.redoStack.add(lastObject);
         //lastObject.undraw();
         this.drawingService.clearCanvas(this.drawingService.baseCtx);

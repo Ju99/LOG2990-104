@@ -12,13 +12,15 @@ export class DrawingService {
 
     clearCanvas(context: CanvasRenderingContext2D): void {
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-    getCanvasData(): ImageData {
-        return this.baseCtx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        if (context === this.baseCtx) {
+            this.baseCtx.beginPath();
+            this.baseCtx.fillStyle = '#FFFFFF';
+            this.baseCtx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.baseCtx.closePath();
+        }
     }
 
-    applyPreview(): void {
-        this.baseCtx.drawImage(this.previewCanvas, 0, 0);
-        this.clearCanvas(this.previewCtx);
+    getCanvasData(): ImageData {
+        return this.baseCtx.getImageData(0, 0, this.canvas.width, this.canvas.height);
     }
 }

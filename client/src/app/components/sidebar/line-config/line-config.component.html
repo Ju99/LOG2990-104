@@ -1,20 +1,22 @@
 <h4>Épaisseur: {{ lineService.lineWidth }} px</h4>
 <div>
-    <mat-slider min="1" max="50" tickInterval="1000" thumbLabel [displayWith]="updateLineWidth" [(ngModel)]="lineService.lineWidth"> </mat-slider>
+  <mat-slider min="1" max="50" tickInterval="1000" thumbLabel [displayWith]="updateLineWidth"
+    [(ngModel)]="lineService.lineWidth"> </mat-slider>
 </div>
 
 <mat-form-field>
-    <mat-label>Type de jonction</mat-label>
-    <mat-select [(ngModel)]="lineService.junctionType">
-        <mat-option [value]="TypeOfJunctions.Regular">Normal</mat-option>
-        <mat-option [value]="TypeOfJunctions.Circle">Point</mat-option>
-    </mat-select>
+  <mat-label>Type de jonction</mat-label>
+  <mat-select class="white" [(ngModel)]="lineService.junctionType">
+    <mat-option [value]="TypeOfJunctions.Regular">Normal</mat-option>
+    <mat-option [value]="TypeOfJunctions.Circle">Point</mat-option>
+  </mat-select>
 </mat-form-field>
 
 <div *ngIf="lineService.junctionType">
-    <h4>Rayon de la jonction: {{ lineService.junctionRadius }} px</h4>
-    <div>
-        <mat-slider min="1" max="50" tickInterval="1000" thumbLabel [displayWith]="updateLineWidth" [(ngModel)]="lineService.junctionRadius">
-        </mat-slider>
-    </div>
+  <h4>Rayon de la jonction: {{ lineService.junctionRadius }} px</h4>
+  <div>
+    <mat-slider min="1" max="50" tickInterval="1000" thumbLabel [displayWith]="updateLineWidth"
+      [(ngModel)]="lineService.junctionRadius">
+    </mat-slider>
+  </div>
 </div>

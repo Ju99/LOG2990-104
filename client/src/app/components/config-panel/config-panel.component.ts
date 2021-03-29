@@ -16,4 +16,14 @@ export class ConfigPanelComponent {
     toggleConfigPanel(): void {
         this.isOpened = !this.isOpened;
     }
+
+    includesColorConfiguration(): boolean {
+        if (
+            this.toolManagerService.currentToolEnum !== ToolList.Eraser &&
+            this.toolManagerService.currentToolEnum !== ToolList.SelectionRectangle &&
+            this.toolManagerService.currentToolEnum !== ToolList.SelectionEllipse
+        )
+            return true;
+        return false;
+    }
 }

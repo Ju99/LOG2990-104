@@ -1,0 +1,40 @@
+<div id="main-container">
+    <div id="header"><h1>Carousel de dessin</h1></div>
+    <div id="filter-container">
+        <label for="ffiltre">Filtre: </label>
+        <input type="text" name="ffiltre" [(ngModel)]="tagInput" />
+        <button (click)="this.addTag()">Entrer</button><br />
+        <p id="filter">Vos filtres:</p>
+        <ul>
+            <li class="tag-list" *ngFor="let tag of tags">
+                {{ tag }}
+                <button mat-icon-button class="remove-btn" (click)="removeTag(tag)">
+                    <mat-icon>highlight_off</mat-icon>
+                </button>
+            </li>
+        </ul>
+        <br />
+    </div>
+    <div id="images-container">
+        <mat-spinner *ngIf="isLoading"></mat-spinner>
+        <div id="no-drawing-container" *ngIf="imageCards.length == 0 && !isLoading">Aucun dessin.</div>
+        <div id="drawings-container" *ngIf="imageCards.length > 0 && !isLoading">
+            <app-carousel-drawing id="previous-drawing" [drawing]="placement[0]"></app-carousel-drawing>
+            <app-carousel-drawing id="main-drawing" [drawing]="placement[1]"></app-carousel-drawing>
+            <app-carousel-drawing id="next-drawing" [drawing]="placement[2]"></app-carousel-drawing>
+            <div id="scrolling-container" mat-dialog-actions>
+                <button mat-button (click)="previousImages()"><mat-icon>keyboard_arrow_left</mat-icon></button>
+                <button mat-button (click)="nextImages()"><mat-icon>keyboard_arrow_right</mat-icon></button>
+            </div>
+            <div id="action-container">
+                <button mat-button matTooltip="Supprimer" (click)="deleteDrawing()" id="delete-button" #recycleBin>
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <button mat-button matTooltip="Charger" (click)="loadImage()" id="load-button" #loadImageButton>
+                    <mat-icon>input</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <button id="quit-button" mat-button mat-dialog-close matTooltip="Fermer"><mat-icon>disabled_by_default</mat-icon></button>
+</div>

@@ -24,6 +24,20 @@ export enum TypeOfJunctions {
     Circle = 1,
 }
 
+export enum ImageFormat {
+    Png = 0,
+    Jpg = 1,
+}
+
+export enum FiltersList {
+    None = 0,
+    Blur = 1,
+    Brightness = 2,
+    Contrast = 3,
+    Invert = 4,
+    Grayscale = 5,
+}
+
 export const DEFAULT_LINE_THICKNESS = 1;
 export const MIN_ERASER_THICKNESS = 5;
 
@@ -39,8 +53,13 @@ export enum ToolList {
     Spray = 5,
     Polygon = 6,
     Pipette = 7,
-    Undo = 8,
-    Redo = 9,
+    SelectionRectangle = 8,
+    SelectionEllipse = 9,
+    Sceau = 10,
+    Lasso = 11,
+    MoveSelection = 12,
+    Undo = 13,
+    Redo = 14,
 }
 
 export const mouseEventLClick = {

@@ -1,21 +1,18 @@
 <div>
     <p>Diamètre du jet</p>
     <h4>Valeur: {{ sprayService.width }} px</h4>
-    <mat-slider min="5" max="50" tickInterval="1000" [(ngModel)]="sprayService.width">
-    </mat-slider>
+    <mat-slider thumbLabel [displayWith]="formatLabel" min="5" max="50" tickInterval="1000" [(ngModel)]="sprayService.width"> </mat-slider>
 </div>
 <hr class="bottomBorder" />
 <div>
     <p>Diamètre des gouttes</p>
     <h4>Valeur: {{ sprayService.dotWidth }} px</h4>
-    <mat-slider min="1" max="20" tickInterval="1000" [(ngModel)]="sprayService.dotWidth">
-    </mat-slider>
+    <mat-slider thumbLabel [displayWith]="formatLabel" min="1" max="20" tickInterval="1000" [(ngModel)]="sprayService.dotWidth"> </mat-slider>
 </div>
 <hr class="bottomBorder" />
 <div>
     <p>Émission par seconde</p>
     <h4>Valeur: {{ sprayService.sprayFrequency }} Émission/seconde</h4>
-    <mat-slider min="10" max="50" tickInterval="1000"  [(ngModel)]="sprayService.sprayFrequency">
-    </mat-slider>
+    <mat-slider thumbLabel [displayWith]="formatLabel" min="10" max="50" tickInterval="1000" [(ngModel)]="sprayService.sprayFrequency"> </mat-slider>
 </div>
 <hr class="bottomBorder" />

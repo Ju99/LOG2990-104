@@ -1,5 +1,5 @@
 <div id="workingArea" #workingArea (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp($event)">
-    <div id="canvas-container" [style.width.px]="width" [style.height.px]="height">
+    <div id="canvas-container" [style.width.px]="width" [style.height.px]="height" (mouseleave)="onMouseLeave($event)">
         <canvas id="canvas" #baseCanvas [attr.width]="width" [attr.height]="height"> </canvas>
         <canvas id="previewLayer" #previewCanvas [attr.width]="width" [attr.height]="height"></canvas>
         <canvas id="cursor" #cursorCanvas [attr.width]="width" [attr.height]="height"> </canvas>

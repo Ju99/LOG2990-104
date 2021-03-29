@@ -10,6 +10,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -20,11 +21,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
+import { CarouselDrawingComponent } from './components/carousel/carouel-drawings/carousel-drawing/carousel-drawing.component';
+import { CarouselComponent } from './components/carousel/carousel-modal/carousel.component';
 import { ConfigPanelComponent } from './components/config-panel/config-panel.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
 import { EditorComponent } from './components/editor/editor.component';
+import { ExportModalComponent } from './components/export-modal/export-modal.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { NewDrawModalComponent } from './components/new-draw-modal/new-draw-modal.component';
+import { SaveDrawingModalComponent } from './components/save-drawing-modal/save-drawing-modal.component';
 import { AlphaSliderComponent } from './components/sidebar/color-components/alpha-slider/alpha-slider.component';
 import { ColorDisplayerComponent } from './components/sidebar/color-components/color-displayer/color-displayer.component';
 import { ColorPaletteComponent } from './components/sidebar/color-components/color-palette/color-palette.component';
@@ -39,10 +44,11 @@ import { PencilConfigComponent } from './components/sidebar/pencil-config/pencil
 import { PipetteComponent } from './components/sidebar/pipette-config/pipette.component';
 import { PolygonConfigComponent } from './components/sidebar/polygon-config/polygon-config.component';
 import { RectangleConfigComponent } from './components/sidebar/rectangle-config/rectangle-config.component';
+import { SelectionConfigComponent } from './components/sidebar/selection-config/selection-config.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
-
 import { SprayConfigComponent } from './components/sidebar/spray-config/spray-config.component';
 import { ToolsListComponent } from './components/sidebar/tools-list/tools-list.component';
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -66,9 +72,14 @@ import { ToolsListComponent } from './components/sidebar/tools-list/tools-list.c
         RectangleConfigComponent,
         ColorPopupComponent,
         ConfigPanelComponent,
+        ExportModalComponent,
         PipetteComponent,
         PolygonConfigComponent,
         SprayConfigComponent,
+        SelectionConfigComponent,
+        SaveDrawingModalComponent,
+        CarouselComponent,
+        CarouselDrawingComponent,
     ],
     imports: [
         BrowserModule,
@@ -93,6 +104,7 @@ import { ToolsListComponent } from './components/sidebar/tools-list/tools-list.c
         MatSnackBarModule,
         BrowserAnimationsModule,
         MatSidenavModule,
+        MatProgressSpinnerModule,
     ],
     entryComponents: [ColorPopupComponent, ColorPickerComponent],
     providers: [],

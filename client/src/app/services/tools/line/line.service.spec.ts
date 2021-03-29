@@ -124,7 +124,6 @@ describe('LineService', () => {
         service['closestPoint'] = mockMousePosition;
         const isCircle = service.junctionType === TypeOfJunctions.Circle;
 
-        
         let calculatePositionSpy = spyOn<any>(service, 'calculatePosition').and.callThrough();
 
         service.onMouseClick(leftMouseEvent);
@@ -220,7 +219,6 @@ describe('LineService', () => {
     });
 
     it('handleKeyDown should call putImageData when Backspace key is pressed', () => {
-       
         let backspaceKeyEvent = { key: 'Backspace', preventDefault(): void {} } as KeyboardEvent;
         service.handleKeyDown(backspaceKeyEvent);
 

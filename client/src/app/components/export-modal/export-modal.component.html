@@ -1,0 +1,58 @@
+<div class="modal-container">
+    <h1 mat-dialog-title>Exporter un dessin</h1>
+    <div mat-dialog-content>Veuillez choisir un nom pour votre dessin.</div>
+
+    <mat-form-field>
+        <input matInput placeholder="Titre du dessin" type="text" [(ngModel)]="exportService.drawingTitle" [maxlength]="this.maxLength" required />
+        <mat-icon matSuffix class="help-btn" [matTooltip]="this.matTooltipForTitle" matTooltipPosition="right">help </mat-icon>
+    </mat-form-field>
+
+    <div class="warning-msg" *ngIf="!this.validateString(exportService.drawingTitle)">
+        Le titre du dessin <span class="underline">ne doit pas</span> comporter de caractères spéciaux ni d'espaces.
+    </div>
+
+    <br />
+    <mat-form-field>
+        <mat-label>Format de l'image</mat-label>
+        <mat-select [(ngModel)]="exportService.currentImageFormat">
+            <mat-option value="png">PNG</mat-option>
+            <mat-option value="jpeg">JPG</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="filters-container">
+        <mat-label>Filtres</mat-label>
+        <mat-select [(ngModel)]="exportService.selectedFilter" (selectionChange)="exportService.applyFilter()">
+            <mat-option [value]="FiltersList.None">Aucun</mat-option>
+            <mat-option [value]="FiltersList.Blur">Flou</mat-option>
+            <mat-option [value]="FiltersList.Brightness">Luminosité</mat-option>
+            <mat-option [value]="FiltersList.Contrast">Contraste</mat-option>
+            <mat-option [value]="FiltersList.Invert">Inversion des couleurs</mat-option>
+            <mat-option [value]="FiltersList.Grayscale">Nuance de gris</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <div *ngIf="exportService.currentFilter !== 'none'">
+        <h4>Intensité du filtre : {{ exportService.filterIntensity }}</h4>
+        <div>
+            <mat-slider
+                min="0"
+                max="100"
+                tickInterval="1000"
+                thumbLabel
+                (change)="exportService.applyFilter()"
+                [(ngModel)]="exportService.filterIntensity"
+            >
+            </mat-slider>
+        </div>
+    </div>
+
+    <div class="preview">
+        <canvas id="canvas" #baseCanvas [attr.width]="exportService.resizeWidth" [attr.height]="exportService.resizeHeight"> </canvas>
+    </div>
+
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close>Annuler</button>
+        <button mat-button mat-dialog-close (click)="exportDrawing()">Exporter</button>
+    </div>
+</div>

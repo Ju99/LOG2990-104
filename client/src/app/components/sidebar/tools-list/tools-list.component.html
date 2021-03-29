@@ -1,6 +1,6 @@
 <div class="container">
     <h3>Outils</h3>
-    <mat-grid-list cols="2">
+    <mat-grid-list cols="3">
         <mat-grid-tile>
             <button
                 [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.Pencil }"
@@ -23,7 +23,17 @@
                 <mat-icon>how_to_vote</mat-icon>
             </button>
         </mat-grid-tile>
-
+        <mat-grid-tile>
+            <button
+                [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.Line }"
+                mat-icon-button
+                matTooltip="Ligne (L)"
+                matTooltipPosition="above"
+                (click)="onTool(ToolList.Line)"
+            >
+                <mat-icon>power_input</mat-icon>
+            </button>
+        </mat-grid-tile>
         <mat-grid-tile>
             <button
                 [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.Rectangle }"
@@ -46,19 +56,28 @@
                 <mat-icon>radio_button_unchecked</mat-icon>
             </button>
         </mat-grid-tile>
-
         <mat-grid-tile>
             <button
-                [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.Line }"
+                [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.Polygon }"
                 mat-icon-button
-                matTooltip="Ligne (L)"
+                matTooltip="Polygon (P)"
                 matTooltipPosition="above"
-                (click)="onTool(ToolList.Line)"
+                (click)="onTool(ToolList.Polygon)"
             >
-                <mat-icon>power_input</mat-icon>
+                <mat-icon>change_history</mat-icon>
             </button>
         </mat-grid-tile>
-
+        <mat-grid-tile>
+            <button
+                [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.Pipette }"
+                mat-icon-button
+                matTooltip="Pipette (I)"
+                matTooltipPosition="above"
+                (click)="onTool(ToolList.Pipette)"
+            >
+                <mat-icon>colorize</mat-icon>
+            </button>
+        </mat-grid-tile>
         <mat-grid-tile>
             <button
                 [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.Spray }"
@@ -72,25 +91,48 @@
         </mat-grid-tile>
         <mat-grid-tile>
             <button
-                [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.Polygon }"
+                [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.Sceau }"
                 mat-icon-button
-                matTooltip="Polygon (P)"
+                matTooltip="Sceau de peinture (A)"
                 matTooltipPosition="above"
-                (click)="onTool(ToolList.Polygon)"
+                (click)="onTool(ToolList.Sceau)"
+                disabled="true"
             >
-                <mat-icon>change_history</mat-icon>
+                <mat-icon>format_color_fill</mat-icon>
             </button>
         </mat-grid-tile>
-
         <mat-grid-tile>
             <button
-                [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.Pipette }"
+                [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.SelectionRectangle }"
                 mat-icon-button
-                matTooltip="Pipette (I)"
+                matTooltip="Selection Rectangle (R)"
                 matTooltipPosition="above"
-                (click)="onTool(ToolList.Pipette)"
+                (click)="onTool(ToolList.SelectionRectangle)"
             >
-                <mat-icon>colorize</mat-icon>
+                <mat-icon>crop_free</mat-icon>
+            </button>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <button
+                [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.SelectionEllipse }"
+                mat-icon-button
+                matTooltip="Selection Ellipse (S)"
+                matTooltipPosition="above"
+                (click)="onTool(ToolList.SelectionEllipse)"
+            >
+                <mat-icon>motion_photos_on</mat-icon>
+            </button>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <button
+                [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.Lasso }"
+                mat-icon-button
+                matTooltip="Lasso polygonal (L)"
+                matTooltipPosition="above"
+                (click)="onTool(ToolList.Lasso)"
+                disabled="true"
+            >
+                <mat-icon>signal_cellular_connected_no_internet_0_bar</mat-icon>
             </button>
         </mat-grid-tile>
         <mat-grid-tile>

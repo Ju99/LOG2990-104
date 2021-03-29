@@ -76,7 +76,6 @@ export class RectangleService extends ShapeService {
         ctx.rect(this.pathData[0].x, this.pathData[0].y, width, length);
 
         if (isAnotherShapeBorder) {
-            this.drawingService.clearCanvas(this.drawingService.previewCtx);
             ctx.rect(this.pathData[0].x, this.pathData[0].y, width, length);
             ctx.stroke();
         } else {
@@ -88,6 +87,7 @@ export class RectangleService extends ShapeService {
         this.computeSize();
         this.findMouseDirection();
         this.shortestSide = Math.abs(this.size.x) < Math.abs(this.size.y) ? Math.abs(this.size.x) : Math.abs(this.size.y);
+        this.pathData.push({ x: this.origin.x + this.shortestSide, y: this.origin.y + this.shortestSide });
         ctx.lineWidth = this.lineWidth;
         ctx.beginPath();
         ctx.rect(this.origin.x, this.origin.y, this.shortestSide, this.shortestSide);

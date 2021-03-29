@@ -28,7 +28,7 @@ export class Line extends Drawable {
                     ctx.lineTo(point.x, point.y);
                     ctx.fillStyle = this.color;
                     ctx.moveTo(point.x + this.radius, point.y);
-                    ctx.arc(point.x, point.y, this.radius, 0, Math.PI * 2, true); // point pour la jonction
+                    ctx.arc(point.x, point.y, this.radius, 0, Math.PI * 2, true);
                     ctx.moveTo(point.x, point.y);
                 } else {
                     ctx.lineJoin = 'miter';

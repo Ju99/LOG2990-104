@@ -1,0 +1,60 @@
+<div class="modal-container">
+    <h1 mat-dialog-title>Sauvegarde d'un dessin</h1>
+    <div mat-dialog-content>Veuillez choisir un nom de sauvegarde pour votre dessin.</div>
+
+    <mat-form-field>
+        <input
+            matInput
+            placeholder="Titre du dessin"
+            type="text"
+            [(ngModel)]="drawingTitle"
+            [minlength]="this.minLength"
+            [maxlength]="this.maxLength"
+            required
+        />
+        <mat-icon matSuffix class="help-btn" [matTooltip]="this.matTooltipForTitle" matTooltipPosition="right">help </mat-icon>
+    </mat-form-field>
+
+    <div class="warning-msg" *ngIf="!this.validateString(drawingTitle) && !isStringEmpty(drawingTitle)">
+        Le titre du dessin <span class="underline">ne doit pas</span> comporter de caractères spéciaux ni d'espaces.
+    </div>
+
+    <div mat-dialog-content>
+        Vous pouvez attribuer jusqu'à 5 étiquettes. Cliquer sur l'icône <mat-icon class="inline-icon">add_circle_outline </mat-icon> pour en ajouter
+        et sur l'icône <mat-icon class="inline-icon">highlight_off</mat-icon> pour en retirer. Laissez le champ vide si vous ne voulez pas ajouter
+        d'étiquettes.
+    </div>
+
+    <mat-form-field>
+        <input matInput placeholder="Étiquettes (optionnel)" [(ngModel)]="tagInput" minlength="0" [maxlength]="this.maxLength" />
+        <mat-icon matSuffix class="help-btn" [matTooltip]="this.matTooltipForTags" matTooltipPosition="right">help </mat-icon>
+    </mat-form-field>
+
+    <button matTooltip="Ajouter" [matTooltipPosition]="'right'" mat-icon-button class="add-btn" (click)="this.addTag()">
+        <mat-icon>add_circle_outline</mat-icon>
+    </button>
+
+    <div class="warning-msg" *ngIf="!this.validateString(tagInput) && !isStringEmpty(tagInput)">
+        Le nom de l'étiquette <span class="underline">ne doit pas</span> comporter de caractères spéciaux ni d'espaces.
+    </div>
+    <div class="warning-msg" *ngIf="validateTagDuplicate()">L'étiquette a déjà été ajoutée!</div>
+
+    <div class="infos">
+        <h4 class="bold" mat-dialog-content>Votre dessin sera sauvegardé avec les informations suivantes :</h4>
+        <p mat-dialog-content><span class="bold">Titre:</span> {{ this.drawingTitle }}</p>
+        <p mat-dialog-content><span class="bold">Étiquette(s):</span></p>
+        <ul>
+            <li class="tag-list" *ngFor="let tag of tags">
+                {{ tag }}
+                <button mat-icon-button class="remove-btn" (click)="removeTag(tag)">
+                    <mat-icon>highlight_off</mat-icon>
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close>Annuler</button>
+        <button mat-button (click)="sendToServer()">Sauvegarder</button>
+    </div>
+</div>

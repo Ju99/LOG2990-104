@@ -8,6 +8,7 @@ export abstract class Tool {
     mouseDown: boolean = false;
     mouseCoord: Vec2;
     mouseMove: boolean = false;
+    isShiftShape: boolean;
 
     constructor(protected drawingService: DrawingService) {}
 
@@ -24,9 +25,12 @@ export abstract class Tool {
     getPositionFromMouse(event: MouseEvent): Vec2 {
         return { x: event.offsetX, y: event.offsetY };
     }
+
     onMouseClick(event: MouseEvent): void {}
 
     onMouseDoubleClick(event: MouseEvent): void {}
+
+    onMouseLeave(event: MouseEvent): void {}
 
     onKeyDown(event: KeyboardEvent): void {}
 

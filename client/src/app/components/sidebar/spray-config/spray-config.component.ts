@@ -31,4 +31,8 @@ export class SprayConfigComponent {
         this.sprayFrequency = newSprayFrequency;
         this.sprayService.changeSprayFrequency(newSprayFrequency);
     }
+
+    formatLabel(value: number): number {
+        return value;
+    }
 }

@@ -74,6 +74,7 @@ export class EllipseService extends ShapeService {
     private drawCircle(ctx: CanvasRenderingContext2D): void {
         ctx.lineWidth = this.lineWidth;
         this.radius = Math.abs(this.size.x) < Math.abs(this.size.y) ? Math.abs(this.size.x) / 2 : Math.abs(this.size.y) / 2;
+        this.pathData.push({ x: this.origin.x + this.radius, y: this.origin.y + this.radius });
         ctx.beginPath();
         ctx.ellipse(this.origin.x, this.origin.y, this.radius, this.radius, 0, 2 * Math.PI, 0);
         this.updateBorderType(ctx);
