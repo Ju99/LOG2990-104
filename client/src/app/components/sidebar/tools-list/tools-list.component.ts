@@ -9,7 +9,7 @@ import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 })
 export class ToolsListComponent {
     ToolList: typeof ToolList = ToolList;
-    constructor(public toolManagerService: ToolManagerService, private undoRedoService: UndoRedoService) {}
+    constructor(public toolManagerService: ToolManagerService, public undoRedoService: UndoRedoService) {}
 
     onTool(selectedTool: ToolList): void {
         this.toolManagerService.switchTool(selectedTool);

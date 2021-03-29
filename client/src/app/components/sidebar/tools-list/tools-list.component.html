@@ -59,7 +59,6 @@
             </button>
         </mat-grid-tile>
 
-
         <mat-grid-tile>
             <button
                 [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.Spray }"
@@ -95,16 +94,20 @@
             </button>
         </mat-grid-tile>
         <mat-grid-tile>
-      <button mat-icon-button matTooltip="Annuler (Ctrl+Z)" matTooltipPosition="above" (click)="undo()"
-        >
-        <mat-icon>undo</mat-icon>
-      </button>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <button mat-icon-button matTooltip="Refaire (Ctrl+Shift+Z)" matTooltipPosition="above" (click)="redo()"
-        >
-        <mat-icon>redo</mat-icon>
-      </button>
-    </mat-grid-tile>
+            <button mat-icon-button matTooltip="Annuler (Ctrl+Z)" matTooltipPosition="above" (click)="undo()" [disabled]="!undoRedoService.canUndo()">
+                <mat-icon>undo</mat-icon>
+            </button>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <button
+                mat-icon-button
+                matTooltip="Refaire (Ctrl+Shift+Z)"
+                matTooltipPosition="above"
+                (click)="redo()"
+                [disabled]="!undoRedoService.canRedo()"
+            >
+                <mat-icon>redo</mat-icon>
+            </button>
+        </mat-grid-tile>
     </mat-grid-list>
 </div>

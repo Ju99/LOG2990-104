@@ -7,6 +7,7 @@ import { MIN_SIZE, ToolList, WORKING_AREA_LENGHT, WORKING_AREA_WIDTH } from '@ap
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import { NewDrawingService } from '@app/services/new-drawing/new-drawing.service';
 import { ToolManagerService } from '@app/services/tools/tool-manager.service';
+import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -36,6 +37,7 @@ export class DrawingComponent implements AfterViewInit, OnDestroy {
         private cdr: ChangeDetectorRef,
         private newDrawingService: NewDrawingService,
         public dialog: MatDialog,
+        private undoRedoService: UndoRedoService,
     ) {
         this.canvasSize = { x: MIN_SIZE, y: MIN_SIZE };
 
@@ -131,6 +133,26 @@ export class DrawingComponent implements AfterViewInit, OnDestroy {
         if (event.ctrlKey && event.key === 'o') {
             event.preventDefault();
             this.dialog.open(NewDrawModalComponent, {});
+        }
+
+        if (event.ctrlKey && event.key === 'z' && this.undoRedoService.canUndo() && !this.toolManagerService.currentTool?.mouseDown) {
+            console.log('ici');
+
+            event.preventDefault();
+            this.undoRedoService.undo();
+        }
+
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            event.code === 'KeyZ' &&
+            this.undoRedoService.canRedo() &&
+            !this.toolManagerService.currentTool?.mouseDown
+        ) {
+            console.log('pas ici');
+
+            event.preventDefault();
+            this.undoRedoService.redo();
         }
     }
 
