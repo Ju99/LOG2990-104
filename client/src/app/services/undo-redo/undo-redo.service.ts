@@ -37,14 +37,14 @@ export class UndoRedoService extends Tool {
         const arrayObject = this.undoStack.getAll();
         console.log(arrayObject);
         this.redoStack.add(lastObject);
-        lastObject.undraw();
+        //lastObject.undraw();
         this.drawingService.clearCanvas(this.drawingService.baseCtx);
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.drawingService.previewCtx.restore();
-        const startImg = this.loadImage.getValue() as LoadedImage;
-        if (startImg.src) {
-            this.loadImage.getValue().draw(this.drawingService.baseCtx);
-        }
+        // const startImg = this.loadImage.getValue() as LoadedImage;
+        // if (startImg.src) {
+        //     this.loadImage.getValue().draw(this.drawingService.baseCtx);
+        // }
         for (const element of arrayObject) {
             element.draw(this.drawingService.baseCtx);
         }

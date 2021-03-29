@@ -85,7 +85,7 @@ export class SprayService extends Tool implements OnDestroy {
         if (this.mouseDown) {
             clearTimeout(this.timeoutId);
             // this.drawingService.applyPreview();
-            this.undoRedoService.setToolInUse(false);
+            //this.undoRedoService.setToolInUse(false);
         }
     }
 
