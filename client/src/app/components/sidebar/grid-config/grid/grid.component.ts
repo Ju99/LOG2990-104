@@ -82,7 +82,7 @@ export class GridComponent {
     }
     @HostListener('window:keydown.-')
     decrease(): void {
-        if (this.isEnabled && this.squareSize < MAX_GRID_SQUARE_SIZE) {
+        if (this.isEnabled && this.squareSize > MIN_GRID_SQUARE_SIZE) {
             this.squareSize -= SQUARE_STEP;
             this.drawingService.gridSpaces = this.squareSize;
             this.selectionService.setGridSpaces(this.squareSize);
