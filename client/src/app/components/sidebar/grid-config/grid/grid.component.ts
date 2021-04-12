@@ -27,7 +27,7 @@ export class GridComponent {
     squareSize: number = DEFAULT_GRID_SIZE;
     currentOpacity: number = DEFAULT_GRID_OPACITY;
 
-    constructor(public drawingService: DrawingService, public selectionService: SelectionService, private textService: TextService) {
+    constructor(public drawingService: DrawingService, public selectionService: SelectionService, public textService: TextService) {
         this.drawingService.gridSpaces = this.squareSize;
         this.selectionService.setGridSpaces(this.squareSize);
         this.drawingService.gridOpacity = this.currentOpacity;
