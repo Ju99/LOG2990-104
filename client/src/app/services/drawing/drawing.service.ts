@@ -49,4 +49,5 @@ export class DrawingService {
         this.gridCtx.closePath();
         this.gridCtx.stroke();
     }
+    
 }
