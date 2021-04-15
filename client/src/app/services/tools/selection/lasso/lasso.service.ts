@@ -23,6 +23,7 @@ const STYLES: DrawingContextStyle = {
     providedIn: 'root',
 })
 export class LassoService extends Tool {
+    confirmedSelection: boolean;
     selectionOver: boolean;
     polygonCoords: Vec2[];
     selectionData: ImageData;
@@ -36,6 +37,7 @@ export class LassoService extends Tool {
 
     constructor(drawingService: DrawingService, private lineService: LineService) {
         super(drawingService);
+        this.confirmedSelection = true;
         this.selectionOver = false;
         this.polygonCoords = [];
         this.currentSegment = [];
@@ -242,6 +244,7 @@ export class LassoService extends Tool {
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.lineService.drawLine(this.drawingService.lassoPreviewCtx, finalSegment, STYLES);
             this.mouseDown = false;
+            this.confirmedSelection = false;
             this.selectionOver = true;
             this.drawingService.clearCanvas(this.drawingService.lassoPreviewCtx);
         }

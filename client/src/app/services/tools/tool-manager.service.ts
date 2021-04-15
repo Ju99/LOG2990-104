@@ -160,20 +160,16 @@ export class ToolManagerService {
     isSelectionEllipse(): void {
         if (this.currentToolEnum === ToolList.SelectionEllipse) {
             this.selectionService.isEllipse = true;
-            this.selectionService.selectionObject.isEllipse = true;
             return;
         }
         this.selectionService.isEllipse = false;
-        this.selectionService.selectionObject.isEllipse = false;
     }
 
     isLasso(): void {
         if (this.currentToolEnum === ToolList.Lasso) {
             this.selectionService.isLasso = true;
-            this.selectionService.selectionObject.isLasso = true;
             return;
         }
         this.selectionService.isLasso = false;
-        this.selectionService.selectionObject.isLasso = false;
     }
 }

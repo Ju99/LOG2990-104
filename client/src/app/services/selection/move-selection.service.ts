@@ -102,12 +102,10 @@ export class MoveSelectionService extends Tool implements OnDestroy {
             }
             this.origin = this.newOrigin;
             this.destination = { x: this.origin.x + this.selectionData.width, y: this.origin.y + this.selectionData.height };
-            this.selectionService.selection = this.selectionData;
-            this.selectionService.origin = this.origin;
-            this.selectionService.destination = this.destination;
+            this.selectionService.selectionObject = this.selectionObject;
             //revoir
-            this.selectionObject.origin = this.origin;
-            this.selectionObject.destination = this.destination;
+            // this.selectionObject.origin = this.origin;
+            // this.selectionObject.destination = this.destination;
             this.selectionUtilsService.createBoundaryBox(this.selectionObject);
         }
     }
@@ -154,12 +152,10 @@ export class MoveSelectionService extends Tool implements OnDestroy {
                 }
             }
 
-            this.selectionService.selection = this.selectionData;
-            this.selectionService.origin = this.origin;
-            this.selectionService.destination = { x: this.origin.x + this.selectionData.width, y: this.origin.y + this.selectionData.height };
+            this.selectionService.selectionObject = this.selectionObject;
             //revoir
-            this.selectionObject.origin = this.origin;
-            this.selectionObject.destination = { x: this.origin.x + this.selectionData.width, y: this.origin.y + this.selectionData.height };
+            // this.selectionObject.origin = this.origin;
+            // this.selectionObject.destination = { x: this.origin.x + this.selectionData.width, y: this.origin.y + this.selectionData.height };
             this.selectionUtilsService.createBoundaryBox(this.selectionObject);
         }
     }
@@ -170,7 +166,7 @@ export class MoveSelectionService extends Tool implements OnDestroy {
         const distanceY: number = this.mouseDownCoord.y - this.initialMousePosition.y;
         this.newOrigin = { x: this.origin.x + distanceX, y: this.origin.y + distanceY };
         if (this.isMagnetism) {
-            this.newOrigin = this.magnetismService.activateMagnetism(this.newOrigin, this.selectionService.height, this.selectionService.width);
+            this.newOrigin = this.magnetismService.activateMagnetism(this.newOrigin, this.selectionObject.height, this.selectionObject.width);
         }
         ctx.putImageData(this.selectionData, this.newOrigin.x, this.newOrigin.y);
     }
@@ -179,7 +175,7 @@ export class MoveSelectionService extends Tool implements OnDestroy {
         let pixelShiftX = DX;
         let pixelShiftY = DY;
 
-        this.newOrigin = this.selectionService.origin;
+        this.newOrigin = this.selectionService.selectionObject.origin;
 
         if (this.isMagnetism) {
             pixelShiftX = this.magnetismService.squareSize;
@@ -202,7 +198,7 @@ export class MoveSelectionService extends Tool implements OnDestroy {
         this.clearUnderneathShape();
         this.drawingService.clearCanvas(ctx);
         if (this.isMagnetism) {
-            this.newOrigin = this.magnetismService.activateMagnetism(this.newOrigin, this.selectionService.height, this.selectionService.width);
+            this.newOrigin = this.magnetismService.activateMagnetism(this.newOrigin, this.selectionObject.height, this.selectionObject.width);
         }
         ctx.putImageData(this.selectionData, this.newOrigin.x, this.newOrigin.y);
         this.selectionData = ctx.getImageData(this.newOrigin.x, this.newOrigin.y, this.selectionData.width, this.selectionData.height);
@@ -212,9 +208,9 @@ export class MoveSelectionService extends Tool implements OnDestroy {
     private initialSelection(): void {
         if (this.selectionService.initialSelection) {
             this.selectionObject = this.selectionService.selectionObject;
-            this.origin = this.selectionService.origin;
-            this.destination = this.selectionService.destination;
-            this.selectionData = this.selectionService.selection;
+            // this.origin = this.selectionService.origin;
+            // this.destination = this.selectionService.destination;
+            // this.selectionData = this.selectionService.selection;
             this.selectionService.initialSelection = false;
         }
     }

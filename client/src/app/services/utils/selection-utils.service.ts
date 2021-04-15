@@ -53,6 +53,8 @@ export class SelectionUtilsService {
     }
 
     mouseInSelectionArea(origin: Vec2, destination: Vec2, mouseCoord: Vec2): boolean {
+        console.log('mouseIn', origin, destination, mouseCoord);
+
         return mouseCoord.x >= origin.x && mouseCoord.x <= destination.x && mouseCoord.y >= origin.y && mouseCoord.y <= destination.y;
     }
 

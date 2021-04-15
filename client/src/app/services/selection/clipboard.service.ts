@@ -27,9 +27,9 @@ export class ClipboardService {
     }
 
     copy(): void {
-        this.selectionData = this.selectionService.selection;
-        this.width = this.selectionService.width;
-        this.height = this.selectionService.height;
+        // this.selectionData = this.selectionService.selection;
+        // this.width = this.selectionService.width;
+        // this.height = this.selectionService.height;
         this.isEllipse = this.selectionService.isEllipse;
         this.isLasso = this.selectionService.isLasso;
         this.pasteAvailable = true;
@@ -66,11 +66,11 @@ export class ClipboardService {
     }
 
     initializeSelectionParameters(): void {
-        this.selectionService.selection = this.selectionData;
-        this.selectionService.origin = { x: 0, y: 0 };
-        this.selectionService.destination = { x: this.width, y: this.height };
-        this.selectionService.width = this.width;
-        this.selectionService.height = this.height;
+        // this.selectionService.selection = this.selectionData;
+        // this.selectionService.origin = { x: 0, y: 0 };
+        // this.selectionService.destination = { x: this.width, y: this.height };
+        // this.selectionService.width = this.width;
+        // this.selectionService.height = this.height;
         this.selectionService.isEllipse = this.isEllipse;
         this.selectionService.isLasso = this.isLasso;
         this.selectionService.activeSelection = true;
