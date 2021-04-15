@@ -16,6 +16,20 @@ export class IndexService {
 
     constructor(private http: HttpClient) {}
 
+    async getNewImage(src: string): Promise<HTMLImageElement> {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = 'Anonymous';
+            img.onload = () => {
+                resolve(img);
+            };
+            img.onerror = (err: string | Event) => {
+                reject(err);
+            };
+            img.src = src;
+        });
+    }
+
     async postDrawing(message: DrawingData): Promise<void> {
         const url: string = this.BASE_URL + this.DATABASE_URL + this.SEND_URL;
         return new Promise<void>((resolve, reject) => {
