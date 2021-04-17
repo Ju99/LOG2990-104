@@ -1,9 +1,8 @@
 // tslint:disable
 import { TestBed } from '@angular/core/testing';
-import { FIRSTCOLORTEST,SECONDCOLORTEST } from 'src/app/constants';
+import { FIRSTCOLORTEST, SECONDCOLORTEST } from 'src/app/constants';
 import { ColorOrder } from 'src/app/interfaces-enums/color-order';
 import { ColorManagerService } from './color-manager.service';
-
 
 describe('ColorManagerService', () => {
     let colorManagerService: ColorManagerService;
@@ -122,5 +121,11 @@ describe('ColorManagerService', () => {
         expect(colorManagerService.selectedColor[ColorOrder.PrimaryColor].Hex.Green).toBe('91');
         expect(colorManagerService.selectedColor[ColorOrder.PrimaryColor].Hex.Blue).toBe('c0');
         expect(colorManagerService.selectedColor[ColorOrder.PrimaryColor].inString).toBe('rgba(197,145,192,0.2)');
+    });
+
+    it('should make the variable primaryColor has an Observer', () => {
+        const spy = spyOn(colorManagerService['colorChange'], 'asObservable').and.stub();
+        colorManagerService.changeColorObserver();
+        expect(spy).toHaveBeenCalled();
     });
 });

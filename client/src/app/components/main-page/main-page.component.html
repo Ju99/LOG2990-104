@@ -1,14 +1,14 @@
 <div class="container">
-    <h1 class="header-item">{{ title }}</h1>
+  <h1 class="header-item">{{ title }}</h1>
 
-    <button class="button" routerLink="/editor">Créer un nouveau dessin</button>
+  <button class="button" routerLink="/editor">Créer un nouveau dessin</button>
 
-    <button class="button" (click)="openCarousel()">Ouvrir le carrousel de dessins</button>
+  <button class="button" (click)="openCarousel()">Ouvrir le carrousel de dessins</button>
 
-    <button class="button" [disabled]="true">Continuer un dessin</button>
+  <button class="button" (click)="continueDrawing()" [disabled]="isDisabled">Continuer un dessin</button>
 
-    <div class="footer-item">
-        <h4 class="team-name">Équipe Polytechnique Montréal</h4>
-        <p>Nassim Boughe, Léa Kim Gilbert, Noursen Houidhek, Audrey Leblanc, Juliette Morin et Miora Rakoto</p>
-    </div>
+  <div class="footer-item">
+    <h4 class="team-name">Équipe Polytechnique Montréal</h4>
+    <p>Nassim Boughe, Léa Kim Gilbert, Noursen Houidhek, Audrey Leblanc, Juliette Morin et Miora Rakoto</p>
+  </div>
 </div>

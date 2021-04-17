@@ -3,8 +3,11 @@ import { MatButton } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DrawingParams } from '@app/components/drawing/drawing-params';
+import { AutoSaveService } from '@app/services/auto-save/auto-save.service';
+import { DrawingService } from '@app/services/drawing/drawing.service';
 import { IndexService } from '@app/services/index/index.service';
 import { Drawing } from '@common/communication/drawing';
+import { DrawingData } from '@common/communication/drawing-data';
 
 @Component({
     selector: 'app-carousel',
@@ -30,6 +33,8 @@ export class CarouselComponent implements AfterViewInit {
         public indexService: IndexService,
         private router: Router,
         private dialogRef: MatDialogRef<CarouselComponent>,
+        private drawingService: DrawingService,
+        private autoSaveService: AutoSaveService,
         @Inject(MAT_DIALOG_DATA) public isCanvaEmpty: boolean,
     ) {
         this.index = 0;
@@ -141,6 +146,14 @@ export class CarouselComponent implements AfterViewInit {
         };
         this.router.navigate(['/'], { skipLocationChange: true }).then(() => this.router.navigate(['editor', params]));
         this.dialogRef.close();
+
+        const drawing: DrawingData = {
+            title: '',
+            width: this.drawingService.canvas.width,
+            height: this.drawingService.canvas.height,
+            body: this.drawingService.canvas.toDataURL(),
+        };
+        this.autoSaveService.saveCanvasState(drawing);
     }
 
     addTag(): void {

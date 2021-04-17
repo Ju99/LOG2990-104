@@ -1,8 +1,10 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { DrawingService } from '@app/services/drawing/drawing.service';
 import { IndexService } from '@app/services/index/index.service';
 import { Drawing } from '@common/communication/drawing';
 import { CarouselComponent } from './carousel.component';
@@ -10,20 +12,26 @@ import { CarouselComponent } from './carousel.component';
 describe('CarouselComponent', () => {
     let component: CarouselComponent;
     let fixture: ComponentFixture<CarouselComponent>;
+    let drawingServiceSpy: jasmine.SpyObj<DrawingService>;
+
     let routerSpy = jasmine.createSpyObj('Router', {
         navigate: new Promise<boolean>(() => {
             return;
         }),
     });
     const dialogSpy = jasmine.createSpy('close');
+
     beforeEach(async(() => {
+        drawingServiceSpy = jasmine.createSpyObj('DrawingService', ['']);
+
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, RouterTestingModule, MatDialogModule],
+            imports: [HttpClientTestingModule, RouterTestingModule, MatDialogModule, MatProgressSpinnerModule],
             declarations: [CarouselComponent],
             providers: [
                 { provide: MatDialogRef, useValue: { close: dialogSpy } },
                 { provide: MAT_DIALOG_DATA, useValue: {} },
                 { provide: Router, useValue: routerSpy },
+                { provide: DrawingService, useValue: drawingServiceSpy },
             ],
         }).compileComponents();
     }));
@@ -58,22 +66,9 @@ describe('CarouselComponent', () => {
     });
 
     it('should open chosen drawing in editor', (done) => {
+        drawingServiceSpy.canvas = document.createElement('canvas');
         routerSpy.navigate.and.returnValue(Promise.resolve());
         component['mainDrawingURL'] = 'poly.png';
-        component.openDrawing();
-
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(routerSpy.navigate).toHaveBeenCalledWith(['editor', { url: 'poly.png' }]);
-            done();
-            expect(dialogSpy).toHaveBeenCalled();
-        });
-    });
-
-    it('should open chosen drawing in editor', (done) => {
-        routerSpy.navigate.and.returnValue(Promise.resolve());
-        component['mainDrawingURL'] = 'poly.png';
-
         component.openDrawing();
 
         fixture.whenStable().then(() => {
@@ -85,9 +80,39 @@ describe('CarouselComponent', () => {
     });
 
     it('should change isCanvaEmpty to true when null', () => {
+        drawingServiceSpy.canvas = document.createElement('canvas');
+        drawingServiceSpy.canvas.width = 100;
+        drawingServiceSpy.canvas.height = 100;
         component.isCanvaEmpty = null!;
         component.loadImage();
         expect(component.isCanvaEmpty).toBeTrue();
+    });
+
+    it('should not set isCanvaEmpty to true when isCanvasEmpty is not null', () => {
+        drawingServiceSpy.canvas = document.createElement('canvas');
+        drawingServiceSpy.canvas.width = 100;
+        drawingServiceSpy.canvas.height = 100;
+        component.isCanvaEmpty = false!;
+        component.loadImage();
+        expect(component.isCanvaEmpty).toBeFalse();
+    });
+
+    it('should open drawing if canvas is NOT empty', () => {
+        component.isCanvaEmpty = false;
+        component['decision'] = true;
+        spyOn<any>(window, 'confirm').and.returnValue(true);
+        const openDrawingSpy = spyOn<any>(component, 'openDrawing').and.stub();
+        component.loadImage();
+        expect(openDrawingSpy).toHaveBeenCalled();
+    });
+
+    it('should open drawing if canvas is empty', () => {
+        component.isCanvaEmpty = false;
+
+        spyOn<any>(window, 'confirm').and.returnValue(false);
+        const openDrawingSpy = spyOn<any>(component, 'openDrawing').and.stub();
+        component.loadImage();
+        expect(openDrawingSpy).not.toHaveBeenCalled();
     });
 
     it('should update images when next', () => {

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PaintConfigComponent } from './paint-config.component';
 
+// tslint:disable
 describe('PaintConfigComponent', () => {
     let component: PaintConfigComponent;
     let fixture: ComponentFixture<PaintConfigComponent>;

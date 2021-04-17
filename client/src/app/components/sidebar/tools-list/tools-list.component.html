@@ -60,7 +60,7 @@
             <button
                 [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.Polygon }"
                 mat-icon-button
-                matTooltip="Polygone (P)"
+                matTooltip="Polygone (3)"
                 matTooltipPosition="above"
                 (click)="onTool(ToolList.Polygon)"
             >
@@ -129,7 +129,6 @@
                 matTooltip="Lasso polygonal (V)"
                 matTooltipPosition="above"
                 (click)="onTool(ToolList.Lasso)"
-                disabled="true"
             >
                 <mat-icon>signal_cellular_connected_no_internet_0_bar</mat-icon>
             </button>

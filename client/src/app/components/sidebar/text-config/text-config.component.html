@@ -1,36 +1,41 @@
 <h4>Taille: {{ textService.size }} px</h4>
-<mat-slider thumbLabel [displayWith]="formatLabel" value="textService.size" (change)="textService.changeSize()" tickInterval="1000" min="1" max="50"
-  [(ngModel)]="textService.size"></mat-slider>
+<mat-slider
+    thumbLabel
+    [displayWith]="formatLabel"
+    value="textService.size"
+    (change)="textService.changeSize()"
+    tickInterval="1000"
+    min="10"
+    max="50"
+    [(ngModel)]="textService.size"
+></mat-slider>
 
 <mat-form-field>
-  <mat-label>Police de caractère</mat-label>
-  <mat-select class="white" value="textService.font" [(ngModel)]="textService.selectFont"
-    (selectionChange)="textService.changeFont()">
-    <mat-option [value]="Font.Arial">Arial</mat-option>
-    <mat-option [value]="Font.TimesNewRoman">Times New Roman</mat-option>
-    <mat-option [value]="Font.ComicSansMs">Comic Sans Ms</mat-option>
-    <mat-option [value]="Font.CourierNew">Courier New</mat-option>
-    <mat-option [value]="Font.Impact">Impact</mat-option>
-  </mat-select>
+    <mat-label>Police de caractère</mat-label>
+    <mat-select class="white" value="textService.font" [(ngModel)]="textService.selectFont" (selectionChange)="textService.changeFont()">
+        <mat-option [value]="Font.Arial">Arial</mat-option>
+        <mat-option [value]="Font.TimesNewRoman">Times New Roman</mat-option>
+        <mat-option [value]="Font.ComicSansMs">Comic Sans Ms</mat-option>
+        <mat-option [value]="Font.CourierNew">Courier New</mat-option>
+        <mat-option [value]="Font.Impact">Impact</mat-option>
+    </mat-select>
 </mat-form-field>
 
 <mat-form-field>
-  <mat-label>Emphase</mat-label>
-  <mat-select class="white" value="textService.emphasis" [(ngModel)]="textService.selectEmphasis"
-    (selectionChange)="textService.changeEmphasis()">
-    <mat-option [value]="Emphasis.Bold">Gras</mat-option>
-    <mat-option [value]="Emphasis.Italic">Italique</mat-option>
-    <mat-option [value]="Emphasis.ItalicBold">Gras et Italique</mat-option>
-    <mat-option [value]="Emphasis.Normal">Normal</mat-option>
-  </mat-select>
+    <mat-label>Emphase</mat-label>
+    <mat-select class="white" value="textService.emphasis" [(ngModel)]="textService.selectEmphasis" (selectionChange)="textService.changeEmphasis()">
+        <mat-option [value]="Emphasis.Bold">Gras</mat-option>
+        <mat-option [value]="Emphasis.Italic">Italique</mat-option>
+        <mat-option [value]="Emphasis.ItalicBold">Gras et Italique</mat-option>
+        <mat-option [value]="Emphasis.Normal">Normal</mat-option>
+    </mat-select>
 </mat-form-field>
 
 <mat-form-field>
-  <mat-label>Alignement</mat-label>
-  <mat-select class="white" value="textService.align" [(ngModel)]="textService.selectAlign"
-    (selectionChange)="textService.changeAlign()">
-    <mat-option [value]="TextAlign.Left">Gauche</mat-option>
-    <mat-option [value]="TextAlign.Center">Centre</mat-option>
-    <mat-option [value]="TextAlign.Right">Droit</mat-option>
-  </mat-select>
+    <mat-label>Alignement</mat-label>
+    <mat-select class="white" value="textService.align" [(ngModel)]="textService.selectAlign" (selectionChange)="textService.changeAlign()">
+        <mat-option [value]="TextAlign.Left">Gauche</mat-option>
+        <mat-option [value]="TextAlign.Center">Centre</mat-option>
+        <mat-option [value]="TextAlign.Right">Droit</mat-option>
+    </mat-select>
 </mat-form-field>

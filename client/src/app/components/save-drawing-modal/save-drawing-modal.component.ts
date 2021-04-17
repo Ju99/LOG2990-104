@@ -44,16 +44,10 @@ export class SaveDrawingModalComponent {
             return;
         }
 
-        this.message = {
-            title: this.drawingTitle,
-            labels: this.tags,
-            height: this.drawingService.baseCtx.canvas.height,
-            width: this.drawingService.baseCtx.canvas.width,
-            body: this.drawingService.canvas.toDataURL(),
-        };
+        const drawingData = this.getDrawingData();
 
         this.indexService
-            .postDrawing(this.message)
+            .postDrawing(drawingData)
             .then(() => {
                 this.matDialogRef.close();
                 alert('Le dessin "' + this.drawingTitle + '" a bien été sauvegardé sur le serveur de PolyDessin !'); // temporaire
@@ -90,6 +84,17 @@ export class SaveDrawingModalComponent {
             if (this.tags[t] === this.tagInput) return true;
         }
         return false;
+    }
+
+    private getDrawingData(): DrawingData {
+        const message = {
+            title: this.drawingTitle,
+            labels: this.tags,
+            height: this.drawingService.baseCtx.canvas.height,
+            width: this.drawingService.baseCtx.canvas.width,
+            body: this.drawingService.canvas.toDataURL(),
+        };
+        return message;
     }
 
     private validateNumberOfTags(): boolean {

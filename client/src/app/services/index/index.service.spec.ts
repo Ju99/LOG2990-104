@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Drawing } from '@common/communication/drawing';
@@ -82,5 +83,19 @@ describe('IndexService', () => {
             expect(tagSpy).toHaveBeenCalled();
             expect(getAllDrawingSpy).toHaveBeenCalled();
         });
+    });
+
+    it('should handle error correctly (client side)', () => {
+        const error = new HttpErrorResponse({ error: new ErrorEvent('test'), status: 404, statusText: 'Not Found' });
+        const alertSpy = spyOn<any>(window, 'alert').and.stub();
+        indexService['handleError'](error);
+        expect(alertSpy).toHaveBeenCalled();
+    });
+
+    it('should handle error correctly (server side)', () => {
+        const error = new HttpErrorResponse({ status: 404, statusText: 'Not Found' });
+        const alertSpy = spyOn<any>(window, 'alert').and.stub();
+        indexService['handleError'](error);
+        expect(alertSpy).toHaveBeenCalled();
     });
 });

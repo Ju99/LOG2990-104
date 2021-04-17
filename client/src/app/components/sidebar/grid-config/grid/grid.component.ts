@@ -10,7 +10,7 @@ import {
     TWO_DECIMAL_MULTIPLIER,
 } from '@app/constants';
 import { DrawingService } from '@app/services/drawing/drawing.service';
-import { SelectionService } from '@app/services/tools/selection/selection.service';
+import { MagnetismService } from '@app/services/selection/magnetism.service';
 import { TextService } from '@app/services/tools/text/text.service';
 
 @Component({
@@ -27,9 +27,9 @@ export class GridComponent {
     squareSize: number = DEFAULT_GRID_SIZE;
     currentOpacity: number = DEFAULT_GRID_OPACITY;
 
-    constructor(public drawingService: DrawingService, public selectionService: SelectionService, private textService: TextService) {
+    constructor(public drawingService: DrawingService, public magnetismService: MagnetismService, private textService: TextService) {
         this.drawingService.gridSpaces = this.squareSize;
-        this.selectionService.setGridSpaces(this.squareSize);
+        this.magnetismService.setGridSpaces(this.squareSize);
         this.drawingService.gridOpacity = this.currentOpacity;
     }
 
@@ -44,7 +44,7 @@ export class GridComponent {
         newSize = Number(newSize);
         this.drawingService.gridSpaces = newSize;
         this.squareSize = newSize;
-        this.selectionService.setGridSpaces(this.squareSize);
+        this.magnetismService.setGridSpaces(this.squareSize);
         if (this.isEnabled) {
             this.drawingService.setGrid();
         }
@@ -76,16 +76,16 @@ export class GridComponent {
         if (this.isEnabled && this.squareSize < MAX_GRID_SQUARE_SIZE) {
             this.squareSize += SQUARE_STEP;
             this.drawingService.gridSpaces = this.squareSize;
-            this.selectionService.setGridSpaces(this.squareSize);
+            this.magnetismService.setGridSpaces(this.squareSize);
             this.drawingService.setGrid();
         }
     }
     @HostListener('window:keydown.-')
     decrease(): void {
-        if (this.isEnabled && this.squareSize < MAX_GRID_SQUARE_SIZE) {
+        if (this.isEnabled && this.squareSize > MIN_GRID_SQUARE_SIZE) {
             this.squareSize -= SQUARE_STEP;
             this.drawingService.gridSpaces = this.squareSize;
-            this.selectionService.setGridSpaces(this.squareSize);
+            this.magnetismService.setGridSpaces(this.squareSize);
             this.drawingService.setGrid();
         }
     }

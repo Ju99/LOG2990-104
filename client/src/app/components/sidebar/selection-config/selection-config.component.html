@@ -1,7 +1,77 @@
-<mat-grid-list cols="1">
+<mat-grid-list cols="2">
     <mat-grid-tile>
         <button mat-icon-button matTooltip="Tout sélectionner (Ctrl+A)" matTooltipPosition="above" (click)="this.selectionService.selectAll()">
             <mat-icon>select_all</mat-icon>
         </button>
     </mat-grid-tile>
+    <mat-grid-tile>
+        <button
+            mat-icon-button
+            matTooltip="Copier (Ctrl+C)"
+            matTooltipPosition="above"
+            (click)="this.clipboardService.copy()"
+            [disabled]="!this.clipboardService.actionsAreAvailable()"
+        >
+            <mat-icon>content_copy</mat-icon>
+        </button>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <button
+            mat-icon-button
+            matTooltip="Coller (Ctrl+V)"
+            matTooltipPosition="above"
+            (click)="this.clipboardService.paste()"
+            [disabled]="!this.clipboardService.pasteAvailable"
+        >
+            <mat-icon>content_paste</mat-icon>
+        </button>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <button
+            mat-icon-button
+            matTooltip="Couper (Ctrl+X)"
+            matTooltipPosition="above"
+            (click)="this.clipboardService.cut()"
+            [disabled]="!this.clipboardService.actionsAreAvailable()"
+        >
+            <mat-icon>content_cut</mat-icon>
+        </button>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <button
+            mat-icon-button
+            matTooltip="Supprimer (DELETE)"
+            matTooltipPosition="above"
+            (click)="this.clipboardService.delete()"
+            [disabled]="!this.clipboardService.actionsAreAvailable()"
+        >
+            <mat-icon>delete</mat-icon>
+        </button>
+    </mat-grid-tile>
 </mat-grid-list>
+<hr />
+<div class="magnetism">
+    <h3>Magnétisme</h3>
+    <mat-slide-toggle
+        [checked]="isMagnetismEnabled"
+        matTooltip="Magnétisme (M)"
+        matTooltipPosition="above"
+        (change)="enableGridMagnetism($event.checked)"
+        >Activer/désactiver</mat-slide-toggle
+    >
+</div>
+<br />
+<mat-form-field>
+    <mat-label>Point d'ancrage</mat-label>
+    <mat-select class="white" [(ngModel)]="magnetismService.anchorPoint">
+        <mat-option [value]="SelectionBox.TopLeft">Supérieur gauche</mat-option>
+        <mat-option [value]="SelectionBox.TopRight">Supérieur droit</mat-option>
+        <mat-option [value]="SelectionBox.BottomRight">Inférieur droit</mat-option>
+        <mat-option [value]="SelectionBox.BottomLeft">Inférieur gauche</mat-option>
+        <mat-option [value]="SelectionBox.TopMiddle">Centre supérieur</mat-option>
+        <mat-option [value]="SelectionBox.RightMiddle">Centre droit</mat-option>
+        <mat-option [value]="SelectionBox.BottomMiddle">Centre inférieur</mat-option>
+        <mat-option [value]="SelectionBox.LeftMiddle">Centre gauche</mat-option>
+        <mat-option [value]="SelectionBox.Center">Centre</mat-option>
+    </mat-select>
+</mat-form-field>

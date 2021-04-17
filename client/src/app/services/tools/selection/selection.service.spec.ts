@@ -106,14 +106,14 @@ describe('SelectionService', () => {
 
     it('onMouseUp should not change the parameters if mouse is not down ', () => {
         service.activeSelection = false;
-        service.onMouseUp();
+        service.onMouseUp(mouseEventLClick);
         expect(service.activeSelection).toEqual(false);
     });
 
     it('onMouseLeave call onMouseUp if the mouse is down', () => {
         service.mouseDown = true;
         const onMouseUpSpy = spyOn(service, 'onMouseUp');
-        service.onMouseLeave();
+        service.onMouseLeave(mouseEventLClick);
         expect(onMouseUpSpy).toHaveBeenCalled();
     });
 

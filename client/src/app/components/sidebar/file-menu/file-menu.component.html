@@ -1,24 +1,22 @@
-<mat-grid-list cols="3">
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Accueil" matTooltipPosition="above" routerLink="/home">
-      <mat-icon>home</mat-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Nouveau dessin (Ctrl+O)" (click)="handleCreateDraw()"
-      matTooltipPosition="above">
-      <mat-icon>add_circle_outline</mat-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Exporter dessin (Ctrl+E)" (click)="handleExportDrawing()"
-      matTooltipPosition="above">
-      <mat-icon>perm_media</mat-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Sauvegarder (Ctrl+S)" matTooltipPosition="above" (click)="handleSaveDrawing()">
-      <mat-icon>save</mat-icon>
-    </button>
-  </mat-grid-tile>
+<mat-grid-list cols="4">
+    <mat-grid-tile>
+        <button mat-icon-button matTooltip="Accueil" matTooltipPosition="above" routerLink="/home">
+            <mat-icon>home</mat-icon>
+        </button>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <button mat-icon-button matTooltip="Nouveau dessin (Ctrl+O)" (click)="handleCreateDraw()" matTooltipPosition="above">
+            <mat-icon>add_circle_outline</mat-icon>
+        </button>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <button mat-icon-button matTooltip="Exporter dessin (Ctrl+E)" (click)="handleExportDrawing()" matTooltipPosition="above">
+            <mat-icon>perm_media</mat-icon>
+        </button>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <button mat-icon-button matTooltip="Sauvegarder (Ctrl+S)" matTooltipPosition="above" (click)="handleSaveDrawing()">
+            <mat-icon>save</mat-icon>
+        </button>
+    </mat-grid-tile>
 </mat-grid-list>

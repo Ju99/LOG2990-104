@@ -1,27 +1,26 @@
 <div class="grid">
     <h3>Grille</h3>
 
-    
-    <mat-slide-toggle [checked]="isEnabled" (change)="switchGridView($event.checked)">Activer/désactiver</mat-slide-toggle>
+    <mat-slide-toggle [checked]="isEnabled" matTooltip="Activer/Désactiver (G)" matTooltipPosition="above" (change)="switchGridView($event.checked)"
+        >Activer/désactiver</mat-slide-toggle
+    >
 
-    
-        <p>Taille des carrés: {{squareSize}}*{{squareSize}}</p>
-        <mat-slider
-            thumbLabel
-            tickInterval="40"
-            min="5"
-            max="200"
-            step="5"
-            [value]="squareSize"
-            [(ngModel)]="squareSize"
-            (change)="changeGridSize(squareSize)"
-        ></mat-slider>
-        
-        
- 
+    <p>Taille des carrés: {{ squareSize }}*{{ squareSize }}</p>
+    <mat-slider
+        thumbLabel
+        tickInterval="40"
+        min="5"
+        max="200"
+        step="5"
+        [value]="squareSize"
+        [(ngModel)]="squareSize"
+        (change)="changeGridSize(squareSize)"
+        matTooltip="Augmenter(+) / Diminuer (-)"
+        matTooltipPosition="above"
+    ></mat-slider>
 
     <div id="section">
-        <p>Opacité des lignes: {{currentOpacity}}%</p>  
+        <p>Opacité des lignes: {{ currentOpacity }}%</p>
         <mat-slider
             thumbLabel
             tickInterval="20"

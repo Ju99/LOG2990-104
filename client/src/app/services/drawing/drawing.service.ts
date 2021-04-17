@@ -10,6 +10,7 @@ export class DrawingService {
     previewCtx: CanvasRenderingContext2D;
     gridCtx: CanvasRenderingContext2D;
     cursorCtx: CanvasRenderingContext2D;
+    lassoPreviewCtx: CanvasRenderingContext2D;
     gridSpaces: number;
     gridOpacity: number;
     isGridEnabled: boolean;

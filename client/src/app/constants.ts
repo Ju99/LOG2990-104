@@ -104,6 +104,9 @@ export const SECONDARYCOLORINITIAL: RGBA = {
     inString: 'rgba(0, 255, 0, 1)',
 };
 
+// constants for selection
+export const CONTROLPOINTSIZE = 10;
+
 // in the following we find testing constants
 export const FIRST_CASE = 75;
 export const SECOND_AND_THIRD_CASE = 25;

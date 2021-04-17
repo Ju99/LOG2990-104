@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SliderComponent } from './slider.component';
 
+// tslint:disable
 describe('SliderComponent', () => {
     let component: SliderComponent;
     let fixture: ComponentFixture<SliderComponent>;

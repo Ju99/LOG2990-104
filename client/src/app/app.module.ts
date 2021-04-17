@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -115,6 +116,7 @@ import { ToolsListComponent } from './components/sidebar/tools-list/tools-list.c
         MatSidenavModule,
         MatProgressSpinnerModule,
         MatRadioModule,
+        MatCheckboxModule,
     ],
     entryComponents: [ColorPopupComponent, ColorPickerComponent],
     providers: [],

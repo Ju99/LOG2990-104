@@ -10,9 +10,9 @@ button:hover {
 }
 
 h3 {
+  
     text-align: center;
-    letter-spacing: 3px;
-    text-shadow: 1px 1px 5px rgb(27, 27, 27);
+    color: rgb(247, 247, 247);
 }
 
 mat-icon {
@@ -21,4 +21,15 @@ mat-icon {
 
 .active {
     color: rgb(255, 87, 87);
+}
+
+mat-label {
+    color: rgb(247, 247, 247);
+}
+
+::ng-deep .white .mat-select-value {
+    color: rgb(247, 247, 247);
+}
+.magnetism{
+    margin-bottom: 10px;
 }

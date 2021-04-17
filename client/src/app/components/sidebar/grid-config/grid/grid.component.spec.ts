@@ -4,7 +4,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DrawingService } from '@app/services/drawing/drawing.service';
-import { SelectionService } from '@app/services/tools/selection/selection.service';
+import { MagnetismService } from '@app/services/selection/magnetism.service';
 import { GridComponent } from './grid.component';
 
 // tslint:disable
@@ -13,17 +13,17 @@ describe('GridComponent', () => {
     let component: GridComponent;
     let fixture: ComponentFixture<GridComponent>;
     let drawingServiceSpy: jasmine.SpyObj<DrawingService>;
-    let selectionServiceSpy: jasmine.SpyObj<SelectionService>;
+    let magnetismServiceSpy: jasmine.SpyObj<MagnetismService>;
 
     beforeEach(async(() => {
         drawingServiceSpy = jasmine.createSpyObj('DrawingService', ['clearCanvas', 'setGrid']);
-        selectionServiceSpy = jasmine.createSpyObj('selectionService', ['setGridSpaces']);
+        magnetismServiceSpy = jasmine.createSpyObj('selectionService', ['setGridSpaces']);
 
         TestBed.configureTestingModule({
             declarations: [GridComponent],
             providers: [
                 { provide: DrawingService, useValue: drawingServiceSpy },
-                { provide: SelectionService, useValue: selectionServiceSpy },
+                { provide: MagnetismService, useValue: magnetismServiceSpy },
             ],
             imports: [MatSliderModule, MatSlideToggleModule, FormsModule, BrowserAnimationsModule],
         }).compileComponents();
@@ -52,7 +52,7 @@ describe('GridComponent', () => {
     it('should set grid spacing on grid size change if grid is enabled', () => {
         component.isEnabled = true;
         component.changeGridSize(10);
-        expect(selectionServiceSpy.setGridSpaces).toHaveBeenCalled();
+        expect(magnetismServiceSpy.setGridSpaces).toHaveBeenCalled();
         expect(drawingServiceSpy.setGrid).toHaveBeenCalled();
     });
 
