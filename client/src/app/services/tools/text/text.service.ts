@@ -1,11 +1,12 @@
 // tslint:disable:max-line-length
 import { Injectable } from '@angular/core';
+import { TextInput } from '@app/classes/text';
 import { CanvasType, Emphasis, Font, TextAlign } from '@app/constants';
 import { DrawingService } from '@app/services/drawing/drawing.service';
+import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 import { ColorOrder } from 'src/app/interfaces-enums/color-order';
 import { ColorManagerService } from 'src/app/services/color-manager/color-manager.service';
 import { TextUtilsService } from 'src/app/services/tools/text/text-utils.service';
-
 @Injectable({
     providedIn: 'root',
 })
@@ -15,7 +16,7 @@ export class TextService extends TextUtilsService {
     private alignBinding: Map<TextAlign, string>;
     private keyBinding: Map<string, () => void>;
 
-    constructor(protected drawingService: DrawingService, private colorManager: ColorManagerService) {
+    constructor(protected drawingService: DrawingService, private colorManager: ColorManagerService, private undoRedoService: UndoRedoService) {
         super(drawingService);
         this.fontBinding = new Map<Font, string>();
         this.fontBinding
@@ -147,6 +148,9 @@ export class TextService extends TextUtilsService {
                 this.textInput[this.currentLine].substring(0, this.cursorPosition) +
                 this.textInput[this.currentLine].substring(this.cursorPosition + 1, this.textInput[this.currentLine].length);
             this.writeOnCanvas(CanvasType.baseCtx);
+            const canvasData = this.drawingService.getCanvasData();
+            const text = new TextInput(canvasData);
+            this.undoRedoService.addToStack(text);
         }
     }
 
