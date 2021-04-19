@@ -2,11 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { DrawingContextStyle } from '@app/classes/drawing-context-styles';
 import { Segment, Utils } from '@app/classes/math-utils';
+import { SelectionTool } from '@app/classes/selection';
 import { Vec2 } from '@app/classes/vec2';
 import { MouseButton } from '@app/constants';
 import { DrawingService } from '@app/services/drawing/drawing.service';
-import { LassoService } from '@app/services/tools/lasso/lasso.service';
 import { LineService } from '@app/services/tools/line/line.service';
+import { LassoService } from '@app/services/tools/selection/lasso/lasso.service';
 
 // tslint:disable
 describe('LassoService', () => {
@@ -24,7 +25,16 @@ describe('LassoService', () => {
         lineServiceSpy = jasmine.createSpyObj('LineService', ['drawLine', 'calculatePosition']);
         previewCtxSpy = jasmine.createSpyObj('CanvasRenderingContext', ['beginPath', 'stroke', 'moveTo', 'lineTo', 'setLineDash']);
         lassoPreviewCtxSpy = jasmine.createSpyObj('CanvasRenderingContext', ['beginPath', 'stroke', 'moveTo', 'lineTo', 'setLineDash']);
-        baseCtxSpy = jasmine.createSpyObj('CanvasRenderingContext', ['beginPath', 'stroke', 'moveTo', 'lineTo']);
+        baseCtxSpy = jasmine.createSpyObj('CanvasRenderingContext', [
+            'beginPath',
+            'stroke',
+            'moveTo',
+            'lineTo',
+            'drawImage',
+            'clip',
+            'restore',
+            'save',
+        ]);
 
         TestBed.configureTestingModule({
             providers: [
@@ -488,5 +498,48 @@ describe('LassoService', () => {
         expect(previewCtxSpy.moveTo).not.toHaveBeenCalled();
         expect(previewCtxSpy.lineTo).not.toHaveBeenCalled();
         expect(previewCtxSpy.stroke).not.toHaveBeenCalled();
+    });
+
+    xit('should return image data if point is in polygon', () => {
+        const selection = new SelectionTool({ x: 10, y: 10 }, { x: 30, y: 30 }, 20, 20);
+        selection.image = new ImageData(10, 10);
+        const pointInPolygonSpy = spyOn<any>(Utils, 'pointInPolygon').and.returnValue(true);
+        service.polygonCoords = [
+            { x: 0, y: 0 },
+            { x: 340, y: 37 },
+            { x: 546, y: 76 },
+            { x: 5, y: 56 },
+        ];
+
+        const result = service.checkPixelInPolygon(selection);
+        expect(pointInPolygonSpy).toHaveBeenCalled();
+        expect(result).toBeInstanceOf(ImageData);
+    });
+
+    it('should return image data if point is not in polygon', () => {
+        const selection = new SelectionTool({ x: 10, y: 10 }, { x: 30, y: 30 }, 20, 20);
+        selection.image = new ImageData(10, 10);
+        const pointInPolygonSpy = spyOn<any>(Utils, 'pointInPolygon').and.returnValue(false);
+        service.polygonCoords = [
+            { x: 0, y: 0 },
+            { x: 340, y: 37 },
+            { x: 546, y: 76 },
+            { x: 5, y: 56 },
+        ];
+
+        const result = service.checkPixelInPolygon(selection);
+        expect(pointInPolygonSpy).toHaveBeenCalled();
+        expect(result).toBeInstanceOf(ImageData);
+    });
+
+    it('should draw image on temporary canvas', () => {
+        const selection = new SelectionTool({ x: 10, y: 10 }, { x: 30, y: 30 }, 20, 20);
+        spyOn<any>(service, 'calculatePath2d').and.returnValue(new Path2D());
+
+        service.printPolygon(new ImageData(10, 10), selection);
+        expect(service['drawingService'].baseCtx.save).toHaveBeenCalled();
+        expect(service['drawingService'].baseCtx.clip).toHaveBeenCalled();
+        expect(service['drawingService'].baseCtx.drawImage).toHaveBeenCalled();
+        expect(service['drawingService'].baseCtx.restore).toHaveBeenCalled();
     });
 });

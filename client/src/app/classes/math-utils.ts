@@ -213,4 +213,8 @@ export class Utils {
         const nearestLine: number[] = this.getClosestLine(currentPoint, basePoint);
         return this.getProjectionOnClosestLine(currentPoint, nearestLine);
     }
+
+    static mod(n: number, m: number): number {
+        return ((n % m) + m) % m;
+    }
 }

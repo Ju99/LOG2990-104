@@ -70,6 +70,7 @@ export class MagnetismService {
     setGridSpaces(size: number): void {
         this.squareSize = size;
     }
+
     private calculateClosestIntersection(topLeftPoint: Vec2, height: number, width: number): Vec2 {
         const intersectionCoord = this.locateAnchorPoint(topLeftPoint, height, width);
         if (intersectionCoord.x % this.squareSize > this.squareSize / 2) {

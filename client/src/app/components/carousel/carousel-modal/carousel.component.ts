@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, Inject, ViewChild }
 import { MatButton } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Utils } from '@app/classes/math-utils';
 import { DrawingParams } from '@app/components/drawing/drawing-params';
 import { AutoSaveService } from '@app/services/auto-save/auto-save.service';
 import { DrawingService } from '@app/services/drawing/drawing.service';
@@ -15,22 +16,24 @@ import { DrawingData } from '@common/communication/drawing-data';
     styleUrls: ['./carousel.component.scss'],
 })
 export class CarouselComponent implements AfterViewInit {
-    private index: number;
-    private mainDrawingURL: string;
     readonly URL_POSITION: number = 4;
-    private decision: boolean;
+
     isLoading: boolean;
-    imageCards: Drawing[];
     placement: Drawing[];
     isDisabled: boolean;
     tags: string[];
     tagInput: string;
+    drawings: Drawing[];
 
+    private index: number;
+    private mainDrawingURL: string;
+    private decision: boolean;
     @ViewChild('loadImageButton', { static: false }) loadImageButton: ElementRef<MatButton>;
     @ViewChild('recycleBin', { static: false }) recycleButton: ElementRef<MatButton>;
 
     constructor(
         public indexService: IndexService,
+
         private router: Router,
         private dialogRef: MatDialogRef<CarouselComponent>,
         private drawingService: DrawingService,
@@ -38,7 +41,7 @@ export class CarouselComponent implements AfterViewInit {
         @Inject(MAT_DIALOG_DATA) public isCanvaEmpty: boolean,
     ) {
         this.index = 0;
-        this.imageCards = [];
+        this.drawings = [];
         this.placement = [];
         this.tags = [];
         this.isLoading = true;
@@ -48,47 +51,18 @@ export class CarouselComponent implements AfterViewInit {
         this.decision = false;
     }
 
-    async ngAfterViewInit(): Promise<void> {
-        this.getDrawings();
+    addTag(): void {
+        const trimmedTag: string = this.tagInput.trim();
+        this.tags.push(trimmedTag);
+        this.tagInput = '';
+        this.searchbyTags();
     }
 
-    getDrawings(): void {
-        this.isLoading = true;
-        this.indexService.getAllDrawings().then((drawings: Drawing[]) => {
-            this.imageCards = drawings;
-            this.isLoading = false;
-            this.updateImagePlacement();
-            this.updateMainImageURL();
-        });
+    removeTag(tag: string): void {
+        this.tags = this.tags.filter((current) => current !== tag);
+        this.searchbyTags();
     }
 
-    async searchbyTags(): Promise<void> {
-        await this.indexService
-            .searchByTags(this.tags)
-            .then((result) => {
-                this.imageCards = result;
-                this.updateImagePlacement();
-            })
-            .catch((error) => {
-                alert(`Un problème de connexion au serveur est survenu. Veuillez réessayer.\n ${error}`);
-            });
-    }
-
-    mod(n: number, m: number): number {
-        return ((n % m) + m) % m;
-    }
-
-    updateImagePlacement(): void {
-        this.placement[0] = this.imageCards[this.mod(this.index - 1, this.imageCards.length)];
-        this.placement[1] = this.imageCards[this.mod(this.index, this.imageCards.length)];
-        this.placement[2] = this.imageCards[this.mod(this.index + 1, this.imageCards.length)];
-    }
-
-    updateMainImageURL(): void {
-        if (this.placement[1].imageURL !== undefined) {
-            this.mainDrawingURL = this.placement[1].imageURL;
-        }
-    }
     nextImages(): void {
         this.index++;
         this.updateImagePlacement();
@@ -98,6 +72,20 @@ export class CarouselComponent implements AfterViewInit {
         this.index--;
         this.updateImagePlacement();
         this.updateMainImageURL();
+    }
+
+    loadImage(): void {
+        if (this.isCanvaEmpty === null) {
+            this.isCanvaEmpty = true;
+        }
+        if (!this.isCanvaEmpty) {
+            this.decision = confirm('Voulez-vous abandonner votre dessin ?');
+            if (this.decision) {
+                this.openEditorWithDrawing();
+            }
+        } else {
+            this.openEditorWithDrawing();
+        }
     }
 
     @HostListener('document:keydown', ['$event'])
@@ -110,6 +98,22 @@ export class CarouselComponent implements AfterViewInit {
         }
     }
 
+    async ngAfterViewInit(): Promise<void> {
+        this.fetchDrawings();
+    }
+
+    async searchbyTags(): Promise<void> {
+        await this.indexService
+            .searchByTags(this.tags)
+            .then((result) => {
+                this.drawings = result;
+                this.updateImagePlacement();
+            })
+            .catch((error) => {
+                alert(`Un problème de connexion au serveur est survenu. Veuillez réessayer.\n ${error}`);
+            });
+    }
+
     async deleteDrawing(): Promise<void> {
         const path = (url: string): string => {
             let parseUrl = new URL(url).pathname;
@@ -119,28 +123,14 @@ export class CarouselComponent implements AfterViewInit {
         this.indexService
             .deleteDrawingById(path(this.mainDrawingURL))
             .then(() => {
-                this.getDrawings();
+                this.fetchDrawings();
             })
             .catch((error) => {
                 alert(`Un problème avec le serveur est survenu. Le dessin n'a pas pu être supprimé. Veuillez réessayer.\nError ${error}`);
             });
     }
 
-    loadImage(): void {
-        if (this.isCanvaEmpty === null) {
-            this.isCanvaEmpty = true;
-        }
-        if (!this.isCanvaEmpty) {
-            this.decision = confirm('Voulez-vous abandonner votre dessin ?');
-            if (this.decision) {
-                this.openDrawing();
-            }
-        } else {
-            this.openDrawing();
-        }
-    }
-
-    openDrawing(): void {
+    private openEditorWithDrawing(): void {
         const params: DrawingParams = {
             url: this.mainDrawingURL,
         };
@@ -156,15 +146,51 @@ export class CarouselComponent implements AfterViewInit {
         this.autoSaveService.saveCanvasState(drawing);
     }
 
-    addTag(): void {
-        const trimmedTag: string = this.tagInput.trim();
-        this.tags.push(trimmedTag);
-        this.tagInput = '';
-        this.searchbyTags();
+    private fetchDrawings(): void {
+        this.isLoading = true;
+        let urlFromServer: string[];
+        let drawingFromDB: Drawing[];
+        this.indexService
+            .getAllDrawingsFromDB()
+            .then((drawings: Drawing[]) => {
+                drawingFromDB = drawings;
+            })
+            .then(() => {
+                this.indexService
+                    .getAllDrawingsFromLocalServer()
+                    .then((url: string[]) => {
+                        urlFromServer = url;
+                    })
+                    .then(() => {
+                        this.drawings = this.findAvailableImages(urlFromServer, drawingFromDB);
+                        this.isLoading = false;
+                        this.updateImagePlacement();
+                        this.updateMainImageURL();
+                    });
+            });
     }
 
-    removeTag(tag: string): void {
-        this.tags = this.tags.filter((current) => current !== tag);
-        this.searchbyTags();
+    private updateImagePlacement(): void {
+        this.placement[0] = this.drawings[Utils.mod(this.index - 1, this.drawings.length)];
+        this.placement[1] = this.drawings[Utils.mod(this.index, this.drawings.length)];
+        this.placement[2] = this.drawings[Utils.mod(this.index + 1, this.drawings.length)];
+    }
+
+    private updateMainImageURL(): void {
+        if (this.placement[1] && this.placement[1].imageURL !== undefined) {
+            this.mainDrawingURL = this.placement[1].imageURL;
+        }
+    }
+
+    private findAvailableImages(urlFromServer: string[], drawingFromDB: Drawing[]): Drawing[] {
+        const availableImages = [];
+        for (const url of urlFromServer) {
+            for (const drawing of drawingFromDB) {
+                if (drawing.imageURL === url) {
+                    availableImages.push(drawing);
+                }
+            }
+        }
+        return availableImages;
     }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DrawingContextStyle } from '@app/classes/drawing-context-styles';
 import { Segment, Utils } from '@app/classes/math-utils';
+import { SelectionTool } from '@app/classes/selection';
 import { Tool } from '@app/classes/tool';
 import { Vec2 } from '@app/classes/vec2';
 import { MouseButton } from '@app/constants';
@@ -10,6 +11,7 @@ import { LineService } from '@app/services/tools/line/line.service';
 const CLOSURE_AREA_RADIUS = 20;
 const NB_MIN_SEGMENTS = 3;
 const ERROR = 0.35;
+const PIXEL_LENGTH = 4;
 const DASH_LINE = 2;
 const STYLES: DrawingContextStyle = {
     strokeStyle: 'black',
@@ -167,15 +169,19 @@ export class LassoService extends Tool {
         }
     }
 
-    resetAttributes(): void {
-        this.mouseDown = false;
-        this.nbSegments = 0;
-        this.areIntesected = false;
-        this.shiftKeyDown = false;
-        this.clearCurrentSegment();
-        this.clearPolygonCoords();
-        this.drawingService.clearCanvas(this.drawingService.lassoPreviewCtx);
-        this.drawingService.clearCanvas(this.drawingService.previewCtx);
+    checkPixelInPolygon(selection: SelectionTool): ImageData {
+        const imageData = selection.image.data;
+        let pixelCounter = 0;
+
+        for (let i = selection.origin.y; i < selection.origin.y + selection.height; i++) {
+            for (let j = selection.origin.x; j < selection.origin.x + selection.width; j++) {
+                if (!Utils.pointInPolygon({ x: j, y: i }, this.polygonCoords)) {
+                    imageData[pixelCounter + PIXEL_LENGTH - 1] = 0;
+                }
+                pixelCounter += PIXEL_LENGTH;
+            }
+        }
+        return selection.image;
     }
 
     calculatePath2d(): Path2D {
@@ -186,6 +192,30 @@ export class LassoService extends Tool {
         }
         polygon.lineTo(this.polygonCoords[0].x, this.polygonCoords[0].y);
         return polygon;
+    }
+
+    printPolygon(imageData: ImageData, selection: SelectionTool): void {
+        const canvas = document.createElement('canvas');
+        canvas.width = selection.width;
+        canvas.height = selection.height;
+        const tmp = canvas.getContext('2d') as CanvasRenderingContext2D;
+        tmp.putImageData(imageData, 0, 0);
+        this.drawingService.baseCtx.save();
+        this.drawingService.baseCtx.clip(this.calculatePath2d());
+
+        this.drawingService.baseCtx.drawImage(tmp.canvas, selection.origin.x, selection.origin.y);
+        this.drawingService.baseCtx.restore();
+    }
+
+    resetAttributes(): void {
+        this.mouseDown = false;
+        this.nbSegments = 0;
+        this.areIntesected = false;
+        this.shiftKeyDown = false;
+        this.clearCurrentSegment();
+        this.clearPolygonCoords();
+        this.drawingService.clearCanvas(this.drawingService.lassoPreviewCtx);
+        this.drawingService.clearCanvas(this.drawingService.previewCtx);
     }
 
     private segmentsAreConfused(segment1: Segment, segment2: Segment): boolean {

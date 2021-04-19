@@ -69,7 +69,7 @@ describe('CarouselComponent', () => {
         drawingServiceSpy.canvas = document.createElement('canvas');
         routerSpy.navigate.and.returnValue(Promise.resolve());
         component['mainDrawingURL'] = 'poly.png';
-        component.openDrawing();
+        component['openEditorWithDrawing']();
 
         fixture.whenStable().then(() => {
             fixture.detectChanges();
@@ -101,16 +101,15 @@ describe('CarouselComponent', () => {
         component.isCanvaEmpty = false;
         component['decision'] = true;
         spyOn<any>(window, 'confirm').and.returnValue(true);
-        const openDrawingSpy = spyOn<any>(component, 'openDrawing').and.stub();
+        const openDrawingSpy = spyOn<any>(component, 'openEditorWithDrawing').and.stub();
         component.loadImage();
         expect(openDrawingSpy).toHaveBeenCalled();
     });
 
     it('should open drawing if canvas is empty', () => {
         component.isCanvaEmpty = false;
-
         spyOn<any>(window, 'confirm').and.returnValue(false);
-        const openDrawingSpy = spyOn<any>(component, 'openDrawing').and.stub();
+        const openDrawingSpy = spyOn<any>(component, 'openEditorWithDrawing').and.stub();
         component.loadImage();
         expect(openDrawingSpy).not.toHaveBeenCalled();
     });
@@ -127,6 +126,15 @@ describe('CarouselComponent', () => {
         expect(component['index']).toEqual(1);
     });
 
+    it('should put updateMainURL', () => {
+        const draw = new Drawing('allo', [], 'img.png');
+
+        component['placement'][1] = draw;
+        component['updateMainImageURL']();
+
+        expect(component['mainDrawingURL']).toEqual('img.png');
+    });
+
     it('should update images when previous', () => {
         component['index'] = 1;
         let spyUpdateImageURL = spyOn<any>(component, 'updateImagePlacement');
@@ -139,30 +147,16 @@ describe('CarouselComponent', () => {
         expect(component['index']).toEqual(0);
     });
 
-    it('should give right modulo', () => {
-        let testResult = component.mod(-1, 4);
-        expect(testResult).toBe(3);
-    });
-
     it('should put the right image on placement', () => {
         let draw = new Drawing('test', [], 'test.png');
-        component.imageCards = [draw];
+        component.drawings = [draw];
         component.placement = [];
 
-        component.updateImagePlacement();
+        component['updateImagePlacement']();
 
         expect(component.placement[0]).toBe(draw);
         expect(component.placement[1]).toBe(draw);
         expect(component.placement[2]).toBe(draw);
-    });
-
-    it('should put the right drawing in the middle', () => {
-        let draw = new Drawing('test', [], 'test.png');
-        component.placement[1] = draw;
-
-        component.updateMainImageURL();
-
-        expect(component['mainDrawingURL']).toBe(draw.imageURL!);
     });
 
     it('should change to previous when arrowleft pressed', async () => {
@@ -183,15 +177,6 @@ describe('CarouselComponent', () => {
         expect(spy).toHaveBeenCalled();
     });
 
-    it('should collect all drawings on getDrawings', async () => {
-        let getAllDrawingsSpy: jasmine.Spy;
-        getAllDrawingsSpy = spyOn(IndexService.prototype, 'getAllDrawings').and.returnValue(Promise.resolve([]));
-
-        component.getDrawings();
-
-        expect(getAllDrawingsSpy).toHaveBeenCalledTimes(1);
-    });
-
     it('should get drawings of tag', async () => {
         let searchByTag: jasmine.Spy;
         component['mainDrawingURL'] = 'http://localhost:3000/api/database/drawings/605a9a7be06fb909f0c904e5.png';
@@ -206,5 +191,13 @@ describe('CarouselComponent', () => {
         deleteSpy = spyOn(IndexService.prototype, 'deleteDrawingById').and.returnValue(Promise.resolve());
         component.deleteDrawing();
         expect(deleteSpy).toHaveBeenCalled();
+    });
+
+    it('should verify if drawing is in server and also in db', async () => {
+        let urlFromServer = ['abc.png', 'pizza.png'];
+        let drawing = new Drawing('pizza', [], 'abc.png');
+        let drawingFromDB = [drawing];
+        const result = component['findAvailableImages'](urlFromServer, drawingFromDB);
+        expect(result).toEqual(drawingFromDB);
     });
 });

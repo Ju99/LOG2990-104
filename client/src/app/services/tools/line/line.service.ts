@@ -24,7 +24,7 @@ export class LineService extends Tool {
     lineWidth: number;
     junctionType: TypeOfJunctions;
     junctionRadius: number;
-    pointJoin: boolean = false;
+    pointJoin: boolean;
     private coordinates: Vec2[];
     private hasPressedShiftKey: boolean;
     private lastCanvasImages: ImageData[];
@@ -38,6 +38,7 @@ export class LineService extends Tool {
         this.lastCanvasImages = [];
         this.currentSegment = [];
         this.hasPressedShiftKey = false;
+        this.pointJoin = false;
     }
 
     onMouseClick(event: MouseEvent): void {

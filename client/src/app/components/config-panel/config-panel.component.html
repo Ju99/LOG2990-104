@@ -11,6 +11,7 @@
         <app-spray-config *ngIf="toolManagerService.currentToolEnum === ToolList.Spray"></app-spray-config>
         <app-selection-config *ngIf="toolManagerService.currentToolEnum === ToolList.SelectionRectangle"></app-selection-config>
         <app-selection-config *ngIf="toolManagerService.currentToolEnum === ToolList.SelectionEllipse"></app-selection-config>
+        <app-stamp-config  *ngIf="toolManagerService.currentToolEnum === ToolList.Stamp"></app-stamp-config>
         <app-selection-config *ngIf="toolManagerService.currentToolEnum === ToolList.Lasso"></app-selection-config>
         <app-paint-config *ngIf="toolManagerService.currentToolEnum === ToolList.PaintBucket"></app-paint-config>
         <app-text-config *ngIf="toolManagerService.currentToolEnum === ToolList.Text"></app-text-config>

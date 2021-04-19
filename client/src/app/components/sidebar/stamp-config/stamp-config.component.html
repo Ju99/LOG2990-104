@@ -1,0 +1,16 @@
+<mat-label>Mise à l'échelle : {{ stampService.resizeFactor }} X</mat-label>
+<mat-slider thumbLabel min="1" max="10"  value = "stampService.resizeFactor"[(ngModel)]="stampService.resizeFactor"></mat-slider>
+
+<mat-label>Angle: {{ stampService.angle }} degrés</mat-label>
+
+<mat-form-field>
+    <mat-label>Étampe</mat-label>
+    <mat-select class="white" value = "stampService.currentStamp" [(ngModel)]="stampService.selectStamp" (selectionChange)="stampService.changeStamp()">
+      <mat-option [value] = "StampList.Surprised">Surpris</mat-option>
+      <mat-option [value] ="StampList.Happy">Heureux</mat-option>
+      <mat-option [value] ="StampList.Sad">Triste</mat-option>
+      <mat-option [value] ="StampList.Glasses">Lunette</mat-option>
+      <mat-option [value] ="StampList.Dead">Mort</mat-option>
+    </mat-select>
+  </mat-form-field>
+

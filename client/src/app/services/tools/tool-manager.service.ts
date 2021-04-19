@@ -13,6 +13,7 @@ import { PipetteService } from './pipette/pipette.service';
 import { PolygonService } from './polygon/polygon.service';
 import { RectangleService } from './rectangle/rectangle.service';
 import { SelectionService } from './selection/selection.service';
+import { StampService } from './stamp/stamp.service';
 import { TextService } from './text/text.service';
 
 @Injectable({
@@ -38,10 +39,12 @@ export class ToolManagerService {
         private sprayService: SprayService,
         private selectionService: SelectionService,
         private moveSelectionService: MoveSelectionService,
+        private stampService: StampService,
         private textService: TextService,
     ) {
         this.currentTool = this.pencilService;
         this.currentToolEnum = ToolList.Pencil;
+
         this.serviceBindings = new Map<ToolList, Tool>();
         this.serviceBindings
             .set(ToolList.Pencil, this.pencilService)
@@ -54,6 +57,8 @@ export class ToolManagerService {
             .set(ToolList.Spray, this.sprayService)
             .set(ToolList.SelectionRectangle, this.selectionService)
             .set(ToolList.SelectionEllipse, this.selectionService)
+            .set(ToolList.MoveSelection, this.moveSelectionService)
+            .set(ToolList.Stamp, this.stampService)
             .set(ToolList.Lasso, this.selectionService)
             .set(ToolList.PaintBucket, this.paintBucketService)
             .set(ToolList.MoveSelection, this.moveSelectionService)
@@ -71,6 +76,7 @@ export class ToolManagerService {
             .set('a', this.sprayService)
             .set('r', this.selectionService)
             .set('s', this.selectionService)
+            .set('d', this.stampService)
             .set('v', this.selectionService)
             .set('b', this.paintBucketService)
             .set('t', this.textService);
@@ -84,7 +90,7 @@ export class ToolManagerService {
     }
 
     handleHotKeysShortcut(event: KeyboardEvent): void {
-        if (this.currentTool && (event.key === 'Shift' || event.key === 'Backspace' || event.key === 'Escape')) {
+        if (this.currentTool && (event.key === 'Shift' || event.key === 'Backspace' || event.key === 'Escape' || event.key === 'Alt')) {
             this.currentTool.handleKeyDown(event);
         } else if (this.textService.isWriting === false) {
             this.switchToolWithKeys(event.key);
@@ -150,6 +156,10 @@ export class ToolManagerService {
 
     onMouseLeave(event: MouseEvent): void {
         if (this.currentTool) this.currentTool.onMouseLeave(event);
+    }
+
+    onWheel(event: WheelEvent): void {
+        if (this.currentTool) this.currentTool.onWheelEvent(event);
     }
 
     handleKeyUp(event: KeyboardEvent): void {

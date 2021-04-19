@@ -52,7 +52,7 @@ describe('IndexService', () => {
         const httpGetSpy = spyOn(indexService['http'], 'get').and.returnValue(of(Drawing));
         const expectedUrl = 'http://localhost:3000/api/database';
         const toDataSpy = spyOn<any>(indexService, 'drawingDataToDrawing').and.stub();
-        indexService.getAllDrawings().then(() => {
+        indexService.getAllDrawingsFromDB().then(() => {
             expect(httpGetSpy).toHaveBeenCalledWith(expectedUrl);
             expect(toDataSpy).toHaveBeenCalled();
         });
@@ -78,7 +78,7 @@ describe('IndexService', () => {
     xit('should research by tags on array with no tag', async () => {
         let tags: string[] = [];
         const tagSpy = spyOn(indexService['http'], 'get').and.returnValue(of(Drawing));
-        const getAllDrawingSpy = spyOn(indexService, 'getAllDrawings');
+        const getAllDrawingSpy = spyOn(indexService, 'getAllDrawingsFromDB');
         indexService.searchByTags(tags).then(() => {
             expect(tagSpy).toHaveBeenCalled();
             expect(getAllDrawingSpy).toHaveBeenCalled();

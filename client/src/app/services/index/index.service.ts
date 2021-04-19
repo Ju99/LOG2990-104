@@ -28,7 +28,7 @@ export class IndexService {
     }
 
     async deleteDrawingById(id: string): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             const url = this.BASE_URL + this.DATABASE_URL + this.DRAWINGS_URL + `/${id}.${this.FILE_FORMAT}`;
             this.http.delete(url, { responseType: 'text' }).subscribe(
                 () => {
@@ -41,12 +41,26 @@ export class IndexService {
         });
     }
 
-    async getAllDrawings(): Promise<Drawing[]> {
-        return new Promise<Drawing[]>((resolve, reject) => {
+    async getAllDrawingsFromDB(): Promise<Drawing[]> {
+        return new Promise<Drawing[]>((resolve) => {
             const url = this.BASE_URL + this.DATABASE_URL;
             return this.http.get<DrawingData[]>(url).subscribe(
                 (drawing: DrawingData[]) => {
                     resolve(this.drawingDataToDrawing(drawing));
+                },
+                (error) => {
+                    return this.handleError(error);
+                },
+            );
+        });
+    }
+
+    async getAllDrawingsFromLocalServer(): Promise<string[]> {
+        return new Promise<string[]>((resolve) => {
+            const url = this.BASE_URL + this.DATABASE_URL + this.DRAWINGS_URL;
+            return this.http.get<string[]>(url).subscribe(
+                (drawing: string[]) => {
+                    resolve(drawing);
                 },
                 (error) => {
                     return this.handleError(error);
@@ -80,7 +94,7 @@ export class IndexService {
             });
         } else {
             return new Promise<Drawing[]>((resolve) => {
-                this.getAllDrawings().then((result) => {
+                this.getAllDrawingsFromDB().then((result) => {
                     resolve(result);
                 });
             });

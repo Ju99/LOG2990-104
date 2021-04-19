@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ToolList } from '@app/constants';
+import { SelectionService } from '@app/services/tools/selection/selection.service';
 import { ToolManagerService } from '@app/services/tools/tool-manager.service';
 import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 @Component({
@@ -9,7 +10,7 @@ import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 })
 export class ToolsListComponent {
     ToolList: typeof ToolList = ToolList;
-    constructor(public toolManagerService: ToolManagerService, public undoRedoService: UndoRedoService) {}
+    constructor(public toolManagerService: ToolManagerService, public undoRedoService: UndoRedoService, public selectionService: SelectionService) {}
 
     onTool(selectedTool: ToolList): void {
         this.toolManagerService.switchTool(selectedTool);

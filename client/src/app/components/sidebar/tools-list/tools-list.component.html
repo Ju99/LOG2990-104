@@ -145,7 +145,14 @@
             </button>
         </mat-grid-tile>
         <mat-grid-tile>
-            <button mat-icon-button matTooltip="Annuler (Ctrl+Z)" matTooltipPosition="above" (click)="undo()" [disabled]="!undoRedoService.canUndo()">
+            <button
+                mat-icon-button
+                matTooltip="Annuler (Ctrl+Z)"
+                matTooltipPosition="above"
+                (click)="this.selectionService.terminateSelection()"
+                (click)="undo()"
+                [disabled]="!undoRedoService.canUndo()"
+            >
                 <mat-icon>undo</mat-icon>
             </button>
         </mat-grid-tile>
@@ -158,6 +165,17 @@
                 [disabled]="!undoRedoService.canRedo()"
             >
                 <mat-icon>redo</mat-icon>
+            </button>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <button
+                [ngClass]="{ active: toolManagerService.currentToolEnum === ToolList.Stamp }"
+                mat-icon-button
+                matTooltip="Étampe (D)"
+                matTooltipPosition="above"
+                (click)="onTool(ToolList.Stamp)"
+            >
+                <mat-icon>check_circle</mat-icon>
             </button>
         </mat-grid-tile>
     </mat-grid-list>

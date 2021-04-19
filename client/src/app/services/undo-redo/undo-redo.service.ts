@@ -51,7 +51,7 @@ export class UndoRedoService extends Tool {
 
     addToStack(drawable: Drawable): void {
         this.undoStack.add(drawable);
-        // this.redoStack.clear();
+        this.redoStack.clear();
     }
 
     redo(): void {

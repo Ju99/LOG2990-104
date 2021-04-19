@@ -1,6 +1,16 @@
 import { CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
 import { ComponentType } from '@angular/cdk/portal';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+    AfterViewChecked,
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    HostListener,
+    OnChanges,
+    OnDestroy,
+    ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Vec2 } from '@app/classes/vec2';
@@ -19,14 +29,14 @@ import { SelectionService } from '@app/services/tools/selection/selection.servic
 import { ToolManagerService } from '@app/services/tools/tool-manager.service';
 import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 import { DrawingData } from '@common/communication/drawing-data';
-import { Subscription, throwError } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-drawing',
     templateUrl: './drawing.component.html',
     styleUrls: ['./drawing.component.scss'],
 })
-export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit, OnChanges {
+export class DrawingComponent implements AfterViewInit, OnDestroy, OnChanges, AfterViewChecked {
     @ViewChild('baseCanvas', { static: false }) baseCanvas: ElementRef<HTMLCanvasElement>;
     @ViewChild('previewCanvas', { static: false }) previewCanvas: ElementRef<HTMLCanvasElement>;
     @ViewChild('gridCanvas', { static: false }) gridCanvas: ElementRef<HTMLCanvasElement>;
@@ -35,12 +45,12 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit, OnCha
     @ViewChild('lassoPreviewCanvas', { static: false }) lassoPreviewCanvas: ElementRef<HTMLCanvasElement>;
 
     dragPosition: Vec2 = { x: 0, y: 0 };
+    canvasSize: Vec2;
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
     private gridCtx: CanvasRenderingContext2D;
     private cursorCtx: CanvasRenderingContext2D;
     private lassoPreviewCtx: CanvasRenderingContext2D;
-    private canvasSize: Vec2;
     private currentDrawing: ImageData;
     private subscription: Subscription;
     private positionX: number;
@@ -78,21 +88,6 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit, OnCha
         this.subscription.unsubscribe();
     }
 
-    ngOnInit(): void {
-        this.route.params.subscribe((params) => {
-            if (params.url) {
-                const path = params.url;
-                this.getNewImage(path)
-                    .then((img) => {
-                        this.baseCtx.drawImage(img, 0, 0);
-                    })
-                    .catch((error) => {
-                        return throwError(error);
-                    });
-            }
-        });
-    }
-
     ngAfterViewInit(): void {
         this.workingArea.nativeElement.style.width = WORKING_AREA_WIDTH;
         this.workingArea.nativeElement.style.height = WORKING_AREA_LENGHT;
@@ -120,16 +115,36 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit, OnCha
             this.canvasSize.x = this.autoSaveService.localDrawing.width;
             this.canvasSize.y = this.autoSaveService.localDrawing.height;
         };
-
         this.cdr.detectChanges();
 
         this.whiteBackgroundCanvas();
     }
 
+    ngAfterViewChecked(): void {
+        this.route.params.subscribe((params) => {
+            if (params.url) {
+                const img = new Image();
+                img.src = params.url;
+                img.crossOrigin = 'Anonymous';
+
+                img.onload = () => {
+                    this.canvasSize.x = img.width;
+                    this.canvasSize.y = img.height;
+                    this.baseCtx.drawImage(img, 0, 0);
+                    this.drawing = {
+                        title: '',
+                        width: this.drawingService.canvas.width,
+                        height: this.drawingService.canvas.height,
+                        body: this.drawingService.canvas.toDataURL(),
+                    };
+                    this.autoSaveService.saveCanvasState(this.drawing);
+                };
+            }
+        });
+    }
+
     ngOnChanges(): void {
         this.route.params.subscribe((params) => {
-            console.log(params.height, params.width);
-
             if (params.height && params.width) {
                 this.canvasSize.x = params.width;
                 this.canvasSize.y = params.height;
@@ -193,6 +208,12 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit, OnCha
         this.toolManagerService.onMouseLeave(event);
     }
 
+    @HostListener('wheel', ['$event'])
+    onWheel(event: WheelEvent): void {
+        event.preventDefault();
+        this.toolManagerService.onWheel(event);
+    }
+
     @HostListener('click', ['$event'])
     onMouseClick(event: MouseEvent): void {
         const ELEMENT = event.target as HTMLElement;
@@ -243,12 +264,10 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit, OnCha
 
         if (resizeX && this.positionX > MIN_SIZE) {
             this.previewCanvas.nativeElement.width = this.positionX;
-            this.gridCanvas.nativeElement.width = this.positionX;
         }
 
         if (resizeY && this.positionY > MIN_SIZE) {
             this.previewCanvas.nativeElement.height = this.positionY;
-            this.gridCanvas.nativeElement.height = this.positionY;
         }
     }
 
@@ -300,21 +319,22 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit, OnCha
         component: ComponentType<NewDrawModalComponent | SaveDrawingModalComponent | CarouselComponent | ExportModalComponent>,
         key: string,
     ): void {
-        if (event.ctrlKey && event.key === key) {
+        if (event.ctrlKey && event.key === key && this.dialog.openDialogs.length === 0) {
             event.preventDefault();
-            if (this.dialog.openDialogs.length === 0) {
-                if (key === 'g') {
+
+            switch (event.key) {
+                case 'g':
                     this.dialog.open(component, { data: this.isCanvasBlank() });
-                }
-                if (key === 'e') {
-                    this.dialog.open(component, {});
+                    break;
+                case 'e':
                     this.exportService.imagePrevisualization();
                     this.exportService.initializeExportParams();
-                } else {
                     this.dialog.open(component, {});
-                }
+                    break;
+                default:
+                    this.dialog.open(component, {});
+                    break;
             }
-            return;
         }
     }
 
@@ -366,20 +386,6 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit, OnCha
             event.preventDefault();
             this.undoRedoService.redo();
         }
-    }
-
-    async getNewImage(src: string): Promise<HTMLImageElement> {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.crossOrigin = 'Anonymous';
-            img.onload = () => {
-                resolve(img);
-            };
-            img.onerror = (err: string | Event) => {
-                reject(err);
-            };
-            img.src = src;
-        });
     }
 
     private isCanvasBlank(): boolean {

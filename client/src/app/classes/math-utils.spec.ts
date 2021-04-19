@@ -229,4 +229,9 @@ describe('MathUtils', () => {
         const result = Utils.getNearestPoint(currentPoint, basePoint);
         expect(result).toEqual(expectedResult);
     });
+
+    it('should give right modulo', () => {
+        let testResult = Utils.mod(-1, 4);
+        expect(testResult).toBe(3);
+    });
 });

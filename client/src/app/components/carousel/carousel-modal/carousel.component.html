@@ -17,8 +17,8 @@
     </div>
     <div id="images-container">
         <mat-spinner *ngIf="isLoading"></mat-spinner>
-        <div id="no-drawing-container" *ngIf="imageCards.length == 0 && !isLoading">Aucun dessin.</div>
-        <div id="drawings-container" *ngIf="imageCards.length > 0 && !isLoading">
+        <div id="no-drawing-container" *ngIf="drawings.length == 0 && !isLoading">Aucun dessin.</div>
+        <div id="drawings-container" *ngIf="drawings.length > 0 && !isLoading">
             <app-carousel-drawing id="previous-drawing" [drawing]="placement[0]"></app-carousel-drawing>
             <app-carousel-drawing id="main-drawing" [drawing]="placement[1]"></app-carousel-drawing>
             <app-carousel-drawing id="next-drawing" [drawing]="placement[2]"></app-carousel-drawing>

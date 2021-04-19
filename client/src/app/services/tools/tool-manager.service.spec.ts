@@ -93,7 +93,7 @@ describe('ToolManagerService', () => {
         const mouseCoord = { x: 25, y: 25 };
         service.onMouseUp(event, mouseCoord);
         expect(rectangleServiceSpy.onMouseUp).toHaveBeenCalled();
-        expect(rectangleServiceSpy.onMouseUp).toHaveBeenCalledWith(event);
+        expect(rectangleServiceSpy.onMouseUp).toHaveBeenCalled();
         expect(rectangleServiceSpy.mouseCoord).toEqual(mouseCoord);
     });
 
@@ -103,7 +103,7 @@ describe('ToolManagerService', () => {
         const mouseCoord = { x: 25, y: 25 };
         service.onMouseUp(event, mouseCoord);
         expect(rectangleServiceSpy.onMouseUp).not.toHaveBeenCalled();
-        expect(rectangleServiceSpy.onMouseUp).not.toHaveBeenCalledWith(event);
+        expect(rectangleServiceSpy.onMouseUp).not.toHaveBeenCalled();
         expect(rectangleServiceSpy.mouseCoord).not.toEqual(mouseCoord);
     });
 

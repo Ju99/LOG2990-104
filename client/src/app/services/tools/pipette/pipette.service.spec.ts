@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { Vec2 } from '@app/classes/vec2';
 import { MouseButton, mouseEventLClick, mouseEventRClick } from '@app/constants';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import { PipetteService } from './pipette.service';
@@ -12,11 +13,10 @@ describe('PipetteService', () => {
     let zoomCtxStub: CanvasRenderingContext2D;
     let zoomCanvasStub: HTMLCanvasElement;
     let mouseEventLeft: MouseEvent;
-    
 
     let baseCtxStub: CanvasRenderingContext2D;
     let previewCanvasStub: HTMLCanvasElement;
-    
+
     const WIDTH_DRAWING_CANVAS = 100;
     const HEIGHT_DRAWING_CANVAS = 100;
     const WIDTH_ZOOM_CANVAS = 50;
@@ -28,10 +28,10 @@ describe('PipetteService', () => {
         canvas = document.createElement('canvas');
         canvas.width = WIDTH_DRAWING_CANVAS;
         canvas.height = HEIGHT_DRAWING_CANVAS;
-     
+
         baseCtxStub = canvas.getContext('2d') as CanvasRenderingContext2D;
         previewCanvasStub = canvas as HTMLCanvasElement;
-     
+
         baseCtxStub.fillStyle = '#000000';
         baseCtxStub.fillRect(0, 0, canvas.width, canvas.height);
         baseCtxStub.fill();
@@ -51,7 +51,7 @@ describe('PipetteService', () => {
         service['drawingService'].canvas = canvas;
         service['drawingService'].baseCtx = baseCtxStub;
         service['drawingService'].previewCanvas = previewCanvasStub;
-        
+
         service.zoom = zoomCanvasStub;
         service.zoomCtx = zoomCtxStub;
         pixelOnZoomSpy = spyOn<any>(service, 'pixelOnZoom').and.callThrough();
@@ -74,9 +74,7 @@ describe('PipetteService', () => {
         const updatePixelColorSpy = spyOn(service.colorManagerService, 'updatePixelColor');
         const emitSpy = spyOn(service.primaryColor, 'emit');
         pixelOnZoomSpy.and.returnValue(expectedColor);
-
         service.onMouseDown(mouseEventLClick);
-
         expect(updatePixelColorSpy).toHaveBeenCalled();
         expect(emitSpy).toHaveBeenCalled();
     });
@@ -88,9 +86,7 @@ describe('PipetteService', () => {
         const updatePixelColorSpy = spyOn(service.colorManagerService, 'updatePixelColor');
         const emitSpy = spyOn(service.secondaryColor, 'emit');
         pixelOnZoomSpy.and.returnValue(expectedColor);
-
         service.onMouseDown(mouseEventRClick);
-
         expect(updatePixelColorSpy).toHaveBeenCalled();
         expect(emitSpy).toHaveBeenCalled();
     });
@@ -145,4 +141,43 @@ describe('PipetteService', () => {
         expect(clearCanvasSpy).toHaveBeenCalled();
     });
 
+    it('Should return pixel when zoom', () => {
+        const mouseEventClick = {
+            x: 25,
+            y: 25,
+            button: 0,
+        } as MouseEvent;
+        spyOn(service, 'getPositionFromMouse').and.returnValue({ x: 25, y: 25 } as Vec2);
+        const getImageSpy = spyOn<any>(service['drawingService'].baseCtx, 'getImageData').and.callThrough();
+        const expectedResult = new Uint8ClampedArray(4);
+        expectedResult[0] = 0;
+        expectedResult[1] = 0;
+        expectedResult[2] = 0;
+        expectedResult[3] = 255;
+        const result = service.pixelOnZoom(mouseEventClick);
+        expect(getImageSpy).toHaveBeenCalledWith(25, 25, 1, 1);
+        expect(result).toEqual(expectedResult);
+    });
+
+    it('Should show zoomed pixel inside a circle shape', () => {
+        const mouseEventClick = {
+            x: 25,
+            y: 25,
+            button: 0,
+        } as MouseEvent;
+        spyOn(service, 'getPositionFromMouse').and.returnValue({ x: 25, y: 25 } as Vec2);
+        const beginPathSpy = spyOn<any>(zoomCtxStub, 'beginPath').and.stub();
+        const arcSpy = spyOn<any>(zoomCtxStub, 'arc').and.stub();
+        const clipSpy = spyOn<any>(zoomCtxStub, 'clip').and.stub();
+        const drawImageSpy = spyOn<any>(zoomCtxStub, 'drawImage').and.stub();
+        const strokeRectSpy = spyOn<any>(zoomCtxStub, 'strokeRect').and.stub();
+        const closePathSpy = spyOn<any>(zoomCtxStub, 'closePath').and.stub();
+        service.drawOnZoom(mouseEventClick);
+        expect(beginPathSpy).toHaveBeenCalled();
+        expect(arcSpy).toHaveBeenCalledWith(25, 25, 75, 0, 2 * Math.PI);
+        expect(clipSpy).toHaveBeenCalled();
+        expect(drawImageSpy).toHaveBeenCalled();
+        expect(strokeRectSpy).toHaveBeenCalledWith(25, 25, 5, 5);
+        expect(closePathSpy).toHaveBeenCalled();
+    });
 });

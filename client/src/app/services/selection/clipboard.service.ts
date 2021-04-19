@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
+import { SelectionTool } from '@app/classes/selection';
+import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/services/drawing/drawing.service';
+import { LassoService } from '@app/services/tools/selection/lasso/lasso.service';
 import { SelectionService } from '@app/services/tools/selection/selection.service';
 import { ToolManagerService } from '@app/services/tools/tool-manager.service';
+import { SelectionUtilsService } from '@app/services/utils/selection-utils.service';
 
 @Injectable({
     providedIn: 'root',
@@ -12,10 +16,17 @@ export class ClipboardService {
     height: number;
     isEllipse: boolean;
     isLasso: boolean;
+    polygonCoords: Vec2[];
 
     pasteAvailable: boolean;
 
-    constructor(private drawingService: DrawingService, private selectionService: SelectionService, private toolManagerService: ToolManagerService) {
+    constructor(
+        private drawingService: DrawingService,
+        private selectionService: SelectionService,
+        private lassoService: LassoService,
+        private toolManagerService: ToolManagerService,
+        private selectionUtilsService: SelectionUtilsService,
+    ) {
         this.pasteAvailable = false;
     }
 
@@ -25,16 +36,23 @@ export class ClipboardService {
         this.height = this.selectionService.height;
         this.isEllipse = this.selectionService.isEllipse;
         this.isLasso = this.selectionService.isLasso;
+        if (this.isLasso) {
+            this.polygonCoords = this.lassoService.polygonCoords;
+        }
         this.pasteAvailable = true;
         this.toolManagerService.currentTool = this.selectionService;
     }
 
     paste(): void {
-        this.selectionService.printMovedSelection(this.drawingService.baseCtx);
+        this.selectionService.printMovedSelection();
         this.initializeSelectionParameters();
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
-        this.selectionService.printMovedSelection(this.drawingService.baseCtx);
-        this.selectionService.createBoundaryBox();
+        this.drawingService.previewCtx.putImageData(this.selectionData, 0, 0);
+        this.selectionService.clearUnderneath = false;
+        const selection = new SelectionTool({ x: 0, y: 0 }, { x: this.width, y: this.height }, this.width, this.height);
+        selection.isEllipse = this.isEllipse;
+        selection.isLasso = this.isLasso;
+        this.selectionUtilsService.createBoundaryBox(selection);
         this.toolManagerService.currentTool = this.selectionService;
     }
 
@@ -45,7 +63,8 @@ export class ClipboardService {
     }
 
     delete(): void {
-        this.selectionService.clearUnderneathShape();
+        if (!this.selectionService.imageMoved) this.selectionUtilsService.clearUnderneathShape(this.selectionService.selectionObject);
+        else this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.selectionService.selectionDeleted = true;
         this.selectionService.terminateSelection();
         this.selectionService.selectionDeleted = false;
@@ -65,6 +84,7 @@ export class ClipboardService {
         this.selectionService.height = this.height;
         this.selectionService.isEllipse = this.isEllipse;
         this.selectionService.isLasso = this.isLasso;
+        if (this.isLasso) this.lassoService.polygonCoords = this.polygonCoords;
         this.selectionService.activeSelection = true;
         this.selectionService.initialSelection = true;
         this.selectionService.imageMoved = true;

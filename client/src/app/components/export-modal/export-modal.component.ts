@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FiltersList } from '@app/constants';
 import { ExportService } from '@app/services/export-image/export.service';
@@ -13,15 +13,16 @@ const ALPHANUMERIC_REGEX = /^[a-z0-9]+$/i;
     styleUrls: ['./export-modal.component.scss'],
 })
 export class ExportModalComponent implements AfterViewInit {
-    @ViewChild('baseCanvas', { static: false }) baseCanvas: ElementRef<HTMLCanvasElement>;
-    matTooltipForTitle: string = `Le titre doit contenir seulement des caractères alphanumériques. Sa longueur doit être au plus de ${MAX_INPUT_SIZE} caractères.`;
+    matTooltipForTitle: string;
     FiltersList: typeof FiltersList = FiltersList;
     maxLength: number;
     imgurIsSelected: boolean;
+    @ViewChild('baseCanvas', { static: false }) private baseCanvas: ElementRef<HTMLCanvasElement>;
     private baseCtx: CanvasRenderingContext2D;
 
-    constructor(public matDialogRef: MatDialogRef<ExportModalComponent>, public exportService: ExportService) {
+    constructor(public matDialogRef: MatDialogRef<ExportModalComponent>, public exportService: ExportService, private cdRef: ChangeDetectorRef) {
         this.maxLength = MAX_INPUT_SIZE;
+        this.matTooltipForTitle = `Le titre doit contenir seulement des caractères alphanumériques. Sa longueur doit être au plus de ${MAX_INPUT_SIZE} caractères.`;
     }
 
     ngAfterViewInit(): void {
@@ -29,6 +30,7 @@ export class ExportModalComponent implements AfterViewInit {
         this.exportService.baseCtx = this.baseCtx;
         this.exportService.canvas = this.baseCanvas.nativeElement;
         this.imgurIsSelected = false;
+        this.cdRef.detectChanges();
     }
 
     exportDrawing(): void {

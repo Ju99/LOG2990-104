@@ -35,4 +35,6 @@ export abstract class Tool {
     onKeyDown(event: KeyboardEvent): void {}
 
     onKeyUp(event: KeyboardEvent): void {}
+
+    onWheelEvent(event: WheelEvent): void {}
 }
