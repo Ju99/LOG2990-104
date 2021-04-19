@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 // tslint:disable
-fdescribe('PaintConfigComponent', () => {
+describe('PaintConfigComponent', () => {
     let component: PaintConfigComponent;
     let fixture: ComponentFixture<PaintConfigComponent>;
     let paintBucketServiceSpy:jasmine.SpyObj<PaintBucketService>;
