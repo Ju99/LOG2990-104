@@ -1,7 +1,7 @@
-import { FormsModule } from '@angular/forms';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { SliderComponent } from './slider.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { SliderComponent } from './slider.component';
 
 // tslint:disable
 describe('SliderComponent', () => {

@@ -116,7 +116,7 @@ export class ColorManagerService {
             ALPHA: this.selectedColor[this.colorOrderGet].Dec.Alpha,
         };
     }
-    
+
     changeColorObserver(): Observable<void> {
         return this.colorChange.asObservable();
     }
